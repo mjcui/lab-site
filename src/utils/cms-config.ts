@@ -345,6 +345,10 @@ export function renderCmsConfigYml(config: CmsRuntimeConfig) {
     `  base_url: ${yamlString(config.oauthBaseUrl)}`,
     '  auth_endpoint: auth',
     `  site_domain: ${yamlString(config.siteDomain)}`,
+    // Open Authoring：没有仓库写权限的同学也能通过 fork 提交内容，
+    // 由崔老师合并 PR。适合"组内多人轮流维护"且不想逐个开权限的场景。
+    // 若不希望开放，删除下一行即可。
+    '  open_authoring: true',
     'publish_mode: editorial_workflow',
     'media_folder: public/uploads',
     'public_folder: /uploads',

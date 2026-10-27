@@ -169,21 +169,43 @@ git push origin main
 
 ## 四、给组内同学开通权限
 
-CMS 需要每位编辑者**有仓库的推送权限**才能保存内容。
+**好消息：仓库是公开的，且已开启 Open Authoring，
+即使不开权限，同学也能通过 fork 提交内容。**
 
-### 方式 A：在 GitHub 上邀请（推荐）
+### 方式 A：不开权限，用 Open Authoring（最省事）
+
+已默认开启。同学首次保存时，GitHub 会提示"是否创建副本（fork）"，
+同意即可，改动会通过 PR 提交给你。
+
+**适合**：人员流动、只想让一两位同学偶尔维护。
+
+### 方式 B：给 Write 权限（推荐给长期维护者）
 
 1. 打开 https://github.com/mjcui/lab-site/settings/access
 2. 点 **Add people**，输入对方的 GitHub 用户名
 3. 角色选 **Write**（可推送内容）
 4. 对方会收到邮件邀请，接受即可
 
-### 方式 B：给一个 Team 统一授权
+**适合**：固定负责维护的同学。他们能直接在自己的分支提交，无需 fork。
+
+### 方式 C：给一个 Team 统一授权
 
 适合人数较多：
 
 1. 仓库 → **Settings** → **Teams** → **Add team**
 2. 或者在组织里建一个 team，把成员拉进去
+
+> 两种方式可以混用：有权限的直接提交，没权限的走 fork。
+
+### 如果想关闭 Open Authoring
+
+编辑 `src/utils/cms-config.ts`，删掉这一行：
+
+```ts
+'  open_authoring: true',
+```
+
+然后重新构建部署。关闭后，只有拥有 Write 权限的人才能使用后台。
 
 ---
 
