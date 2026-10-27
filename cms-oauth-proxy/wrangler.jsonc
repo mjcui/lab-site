@@ -1,0 +1,14 @@
+{
+  // Decap CMS 的 GitHub OAuth 代理（Cloudflare Worker）
+  //
+  // 部署：npx wrangler deploy
+  // 密钥：npx wrangler secret put GITHUB_OAUTH_ID
+  //       npx wrangler secret put GITHUB_OAUTH_SECRET
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lab-site-cms-oauth",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://doubleducklab.com/';
+const DEFAULT_SITE_URL = 'https://mjcui.github.io/lab-site/';
 
 type EnvSource = Record<string, string | boolean | undefined>;
 

@@ -42,6 +42,12 @@ jobs:
           PUBLIC_SITE_URL: https://mjcui.github.io/lab-site/
           CMS_GITHUB_REPO: mjcui/lab-site
           CMS_BRANCH: main
+          # 内容管理后台的 OAuth 代理地址。
+          # 部署方法见《CMS后台启用指南.md》。
+          # 部署完成后，把下面这行改成你的实际地址（去掉引号）：
+          #   CMS_OAUTH_BASE_URL: https://decap-proxy.你的子域名.workers.dev
+          # 保持为空时，/admin/ 会提示尚未配置，网站其余部分不受影响。
+          CMS_OAUTH_BASE_URL: ""
         run: npm run build
 
       - name: Upload Pages artifact
