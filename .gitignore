@@ -22,3 +22,6 @@ decisions/
 docs/
 ops/
 sources/
+
+# 本机 AI 助手工作目录（本地数据，不进公开仓库）
+.workbuddy/

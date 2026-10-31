@@ -1,47 +1,38 @@
 ---
-import { b } from '../../utils/seo';
+import { b, asset } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import QuickNav from '../../components/QuickNav.astro';
 import siteEn from '../../data/site.en.json';
-import { getCollection } from 'astro:content';
-import { buildLocalizedProjects, projectDisplayMeta } from '../../utils/projects-localized';
 
 const t = siteEn;
-const projectEntries = await getCollection('projects');
-const recentProjects = buildLocalizedProjects(projectEntries)
-  .filter((item) => item.entry.overview.en)
-  .slice(0, 3);
-const highlightLinks = ['/en/projects/', '/en/papers/', '/en/join/'];
-
-function resolveProjectStatusTone(status: string) {
-  const value = (status || '').toLowerCase();
-  if (value.includes('completed') || value.includes('alumni') || value.includes('former') || value.includes('已完成') || value.includes('毕业')) {
-    return 'former';
-  }
-  if (value.includes('ongoing') || value.includes('active') || value.includes('current') || value.includes('进行中') || value.includes('在读')) {
-    return 'current';
-  }
-  return '';
-}
-
-function formatPreviewTimeRange(value: string) {
-  const years = (value || '').match(/\d{4}/g) || [];
-  if (!years.length) {
-    return '';
-  }
-  const start = years[0];
-  const end = years[1] || years[0];
-  return `${start}-${end}`;
-}
+const highlightLinks = ['/en/members/', '/en/papers/', '/en/join/'];
 ---
 <BaseLayout title="Home" desc={t.home.intro} lang="en" pathPrefix="/en">
-  <section class="card hero hero-glow gradient-frame mb-5" data-reveal>
+  <section class="card hero hero-photo hero-center mb-5" data-reveal>
+    <img class="hero-media" src={asset('/images/tju-gate1895.jpg')} alt="Tianjin University 1895 Gate, Beiyang Park Campus" />
+    <img class="hero-badge" src={asset('/images/tju_badge_white.svg')} alt="Tianjin University badge" width="88" height="88" />
+    <div class="hero-affil" data-reveal data-reveal-delay="40">Tianjin University · School of Electrical and Information Engineering</div>
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
     <div class="hero-actions" data-reveal data-reveal-delay="180">
-      <a class="btn btn-primary" href={b('/en/papers/')}>View Papers</a>
+      <a class="btn btn-gold" href={b('/en/join/')}>Join Us</a>
+      <a class="btn btn-ghost" href={b('/en/papers/')}>View Papers</a>
       <a class="btn btn-ghost" href={b('/en/projects/')}>Explore Projects</a>
       <a class="btn btn-ghost" href={b('/en/members/')}>Meet Members</a>
-      <a class="btn btn-ghost" href={b('/en/join/')}>Join Us</a>
+    </div>
+  </section>
+
+  <section class="card home-about mb-5" data-reveal>
+    <div class="home-about-media">
+      <img src={asset('/images/tju-nine.jpg')} alt="Tianjin University Ninth Teaching Building" loading="lazy" decoding="async" />
+    </div>
+    <div class="home-about-body">
+      <div class="page-head"><h2 class="page-title">{t.home.platform.title}</h2></div>
+      <p class="home-about-school">{t.home.platform.school}</p>
+      <p class="home-about-desc">{t.home.platform.desc}</p>
+      <ul class="home-about-tags">
+        {t.home.platform.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
     </div>
   </section>
 
@@ -60,36 +51,8 @@ function formatPreviewTimeRange(value: string) {
     </div>
   </section>
 
-  <section class="mb-5">
-    <div class="page-head" data-reveal>
-      <h2 class="page-title">{t.home.sections?.recentProjects ?? t.home.sections?.featuredProjects ?? 'Recent Projects'}</h2>
-    </div>
-    <div class="grid grid-3" data-reveal-group>
-      {recentProjects.map((item, i) => {
-        const p = projectDisplayMeta(item, 'en');
-        return (
-          <article class="card card-hover card-clickable stack-sm" data-reveal data-reveal-order={String(i)}>
-            <a class="card-link-overlay" href={b(`/en/projects/${item.slug}/`)} aria-label={`View project ${p.title}`}></a>
-            <h3>{p.title}</h3>
-            <div class="meta">
-              {p.time && <span class="badge-muted">{formatPreviewTimeRange(p.time)}</span>}
-              {p.status && <span class={`status-chip status-${resolveProjectStatusTone(p.status)}`}>{p.status}</span>}
-            </div>
-          </article>
-        );
-      })}
-    </div>
-  </section>
-
   <section class="card" data-reveal>
     <h2>{t.home.quick}</h2>
-    <ul class="quick-links">
-      <li><a href={b('/en/members/')}>Members</a></li>
-      <li><a href={b('/en/projects/')}>Projects</a></li>
-      <li><a href={b('/en/papers/')}>Publications</a></li>
-      <li><a href={b('/en/news/')}>News</a></li>
-      <li><a href={b('/en/life/')}>Lab &amp; Equipment</a></li>
-      <li><a href={b('/en/join/')}>Recruitment</a></li>
-    </ul>
+    <QuickNav links={t.home.quickLinks} prefix="/en" />
   </section>
 </BaseLayout>

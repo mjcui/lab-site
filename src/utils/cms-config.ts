@@ -1,6 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 const DEFAULT_SITE_URL = 'https://doubleducklab.com/';
 
 type EnvSource = Record<string, string | boolean | undefined>;
@@ -135,74 +132,6 @@ function bodyField(options: { required?: boolean; indent?: number } = {}) {
   }
 
   return lines;
-}
-
-function listProjectSlugs() {
-  const projectsDir = path.resolve('src/content/projects');
-  try {
-    return fs
-      .readdirSync(projectsDir, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort((a, b) => a.localeCompare(b));
-  } catch {
-    return [];
-  }
-}
-
-function projectFileName(slug: string, section: 'overview' | 'background', locale: 'cn' | 'en') {
-  return `${slug.replace(/[^a-z0-9]+/gi, '_')}_${section}_${locale}`;
-}
-
-function projectOverviewFile(slug: string, locale: 'cn' | 'en') {
-  const labelLocale = locale === 'cn' ? 'Chinese' : 'English';
-  return [
-    `      - label: ${yamlString(`${slug} Overview (${labelLocale})`)}`,
-    `        name: ${projectFileName(slug, 'overview', locale)}`,
-    `        file: ${yamlString(`src/content/projects/${slug}/overview_${locale}.md`)}`,
-    '        fields:',
-    ...stringField('Title', 'title', { indent: 10 }),
-    ...stringField('Tag', 'tag', { required: false, indent: 10 }),
-    ...stringField('Time', 'time', { required: false, indent: 10 }),
-    ...stringField('Status', 'status', { indent: 10 }),
-    ...optionalLinksField([
-      ['Repository URL', 'repo'],
-      ['Demo URL', 'demo'],
-      ['Paper URL', 'paper'],
-    ], 10),
-    ...bodyField({ indent: 10 }),
-  ];
-}
-
-function projectBackgroundFile(slug: string, locale: 'cn' | 'en') {
-  const labelLocale = locale === 'cn' ? 'Chinese' : 'English';
-  return [
-    `      - label: ${yamlString(`${slug} Background (${labelLocale})`)}`,
-    `        name: ${projectFileName(slug, 'background', locale)}`,
-    `        file: ${yamlString(`src/content/projects/${slug}/background_${locale}.md`)}`,
-    '        fields:',
-    ...bodyField({ indent: 10 }),
-  ];
-}
-
-function projectFilesCollection() {
-  const projectFiles = listProjectSlugs().flatMap((slug) => [
-    ...projectOverviewFile(slug, 'cn'),
-    ...projectOverviewFile(slug, 'en'),
-    ...projectBackgroundFile(slug, 'cn'),
-    ...projectBackgroundFile(slug, 'en'),
-  ]);
-
-  return [
-    '  - name: projects',
-    '    label: Projects',
-    '    label_singular: Project File',
-    '    delete: false',
-    '    editor:',
-    '      preview: false',
-    '    files:',
-    ...projectFiles,
-  ];
 }
 
 function cmsCollections() {
@@ -358,8 +287,6 @@ function cmsCollections() {
     '        fields:',
     ...stringField('Title', 'title', { indent: 10 }),
     ...bodyField({ indent: 10 }),
-    '',
-    ...projectFilesCollection(),
     '',
   ];
 }

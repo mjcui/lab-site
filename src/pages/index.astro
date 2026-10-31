@@ -1,47 +1,38 @@
 ---
-import { b } from '../utils/seo';
+import { b, asset } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import QuickNav from '../components/QuickNav.astro';
 import siteZh from '../data/site.zh.json';
-import { getCollection } from 'astro:content';
-import { buildLocalizedProjects, projectDisplayMeta } from '../utils/projects-localized';
 
 const t = siteZh;
-const projectEntries = await getCollection('projects');
-const recentProjects = buildLocalizedProjects(projectEntries)
-  .filter((item) => item.entry.overview.zh)
-  .slice(0, 3);
-const highlightLinks = ['/projects/', '/papers/', '/join/'];
-
-function resolveProjectStatusTone(status: string) {
-  const value = (status || '').toLowerCase();
-  if (value.includes('已完成') || value.includes('毕业') || value.includes('离开') || value.includes('completed')) {
-    return 'former';
-  }
-  if (value.includes('进行中') || value.includes('在读') || value.includes('在职') || value.includes('ongoing') || value.includes('active')) {
-    return 'current';
-  }
-  return '';
-}
-
-function formatPreviewTimeRange(value: string) {
-  const years = (value || '').match(/\d{4}/g) || [];
-  if (!years.length) {
-    return '';
-  }
-  const start = years[0];
-  const end = years[1] || years[0];
-  return `${start}-${end}`;
-}
+const highlightLinks = ['/members/', '/papers/', '/join/'];
 ---
 <BaseLayout title="首页" desc={t.home.intro} lang="zh" pathPrefix="">
-  <section class="card hero hero-glow gradient-frame mb-5" data-reveal>
+  <section class="card hero hero-photo hero-center mb-5" data-reveal>
+    <img class="hero-media" src={asset('/images/tju-gate1895.jpg')} alt="天津大学北洋园校区 1895 门楼" />
+    <img class="hero-badge" src={asset('/images/tju_badge_white.svg')} alt="天津大学校徽" width="88" height="88" />
+    <div class="hero-affil" data-reveal data-reveal-delay="40">天津大学 · 电气自动化与信息工程学院</div>
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
     <div class="hero-actions" data-reveal data-reveal-delay="180">
-      <a class="btn btn-primary" href={b('/papers/')}>查看论文</a>
+      <a class="btn btn-gold" href={b('/join/')}>招生合作</a>
+      <a class="btn btn-ghost" href={b('/papers/')}>查看论文</a>
       <a class="btn btn-ghost" href={b('/projects/')}>查看项目</a>
       <a class="btn btn-ghost" href={b('/members/')}>了解成员</a>
-      <a class="btn btn-ghost" href={b('/join/')}>招生合作</a>
+    </div>
+  </section>
+
+  <section class="card home-about mb-5" data-reveal>
+    <div class="home-about-media">
+      <img src={asset('/images/tju-nine.jpg')} alt="天津大学第九教学楼" loading="lazy" decoding="async" />
+    </div>
+    <div class="home-about-body">
+      <div class="page-head"><h2 class="page-title">{t.home.platform.title}</h2></div>
+      <p class="home-about-school">{t.home.platform.school}</p>
+      <p class="home-about-desc">{t.home.platform.desc}</p>
+      <ul class="home-about-tags">
+        {t.home.platform.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
     </div>
   </section>
 
@@ -60,36 +51,8 @@ function formatPreviewTimeRange(value: string) {
     </div>
   </section>
 
-  <section class="mb-5">
-    <div class="page-head" data-reveal>
-      <h2 class="page-title">{t.home.sections?.recentProjects ?? t.home.sections?.featuredProjects ?? '最近项目'}</h2>
-    </div>
-    <div class="grid grid-3" data-reveal-group>
-      {recentProjects.map((item, i) => {
-        const p = projectDisplayMeta(item, 'zh');
-        return (
-          <article class="card card-hover card-clickable stack-sm" data-reveal data-reveal-order={String(i)}>
-            <a class="card-link-overlay" href={b(`/projects/${item.slug}/`)} aria-label={`查看项目 ${p.title}`}></a>
-            <h3>{p.title}</h3>
-            <div class="meta">
-              {p.time && <span class="badge-muted">{formatPreviewTimeRange(p.time)}</span>}
-              {p.status && <span class={`status-chip status-${resolveProjectStatusTone(p.status)}`}>{p.status}</span>}
-            </div>
-          </article>
-        );
-      })}
-    </div>
-  </section>
-
   <section class="card" data-reveal>
     <h2>{t.home.quick}</h2>
-    <ul class="quick-links">
-      <li><a href={b('/members/')}>成员列表</a></li>
-      <li><a href={b('/projects/')}>项目展示</a></li>
-      <li><a href={b('/papers/')}>论文列表</a></li>
-      <li><a href={b('/news/')}>新闻动态</a></li>
-      <li><a href={b('/life/')}>实验室与设备</a></li>
-      <li><a href={b('/join/')}>招生与合作</a></li>
-    </ul>
+    <QuickNav links={t.home.quickLinks} />
   </section>
 </BaseLayout>

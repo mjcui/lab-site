@@ -1,69 +1,21 @@
 ---
 import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-import { buildLocalizedProjects, projectDisplayMeta } from '../../utils/projects-localized';
 
-const projectEntries = await getCollection('projects');
-const projects = buildLocalizedProjects(projectEntries).filter((item) => item.entry.overview.en);
-const pageDesc = 'Browse ongoing and completed projects in our lab.';
-
-function resolveProjectStatusTone(status: string) {
-  const value = (status || '').toLowerCase();
-  if (value.includes('completed') || value.includes('alumni') || value.includes('former') || value.includes('已完成') || value.includes('毕业')) {
-    return 'former';
-  }
-  if (value.includes('ongoing') || value.includes('active') || value.includes('current') || value.includes('进行中') || value.includes('在读')) {
-    return 'current';
-  }
-  return '';
-}
-
-function formatPreviewTimeRange(value: string) {
-  const years = (value || '').match(/\d{4}/g) || [];
-  if (!years.length) {
-    return '';
-  }
-  const start = years[0];
-  const end = years[1] || years[0];
-  return `${start}-${end}`;
-}
+const pageDesc = 'Our ongoing and completed projects are primarily NSFC (National Natural Science Foundation of China) grants and industry (horizontal) collaborations. Content is being organized.';
 ---
 <BaseLayout title="Projects" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Projects</h1>
   </section>
 
-  <section class="filter-wrap" data-list-filter-root data-reveal>
-    <input
-      class="filter-input"
-      type="search"
-      data-list-search
-      placeholder="Search title / status / time..."
-      aria-label="Search projects"
-    />
-    <p class="empty-state" data-empty-state hidden>No matching project found. Try another keyword.</p>
-
-    <div class="grid grid-3 project-grid" data-list-intro>
-      {projects.map((item, i) => {
-        const meta = projectDisplayMeta(item, 'en');
-        return (
-          <a
-            href={b(`/en/projects/${item.slug}/`)}
-            class="card card-hover card-link stack-sm"
-            data-list-intro-item
-            {...(i < 32 ? { 'data-list-intro-active': true } : {})}
-            data-list-card
-            data-search-text={`${meta.title} ${meta.status} ${meta.time} ${meta.tag || ''}`}
-          >
-            <h3>{meta.title}</h3>
-            <div class="meta">
-              {meta.time && <span class="badge-muted">{formatPreviewTimeRange(meta.time)}</span>}
-              {meta.status && <span class={`status-chip status-${resolveProjectStatusTone(meta.status)}`}>{meta.status}</span>}
-            </div>
-          </a>
-        );
-      })}
+  <section class="card detail-hero" data-reveal>
+    <span class="badge-muted">In progress</span>
+    <h2 class="mt-4">NSFC Grants &amp; Industry (Horizontal) Projects</h2>
+    <p class="mt-4">Our ongoing and completed projects are primarily National Natural Science Foundation of China (NSFC) grants and industry (horizontal) collaborations. This section is being organized and will go live once specific project information is added.</p>
+    <div class="back-row" data-reveal>
+      <a class="btn btn-primary" href={b('/en/')}>Back to Home</a>
+      <a class="btn btn-ghost" href={b('/en/papers/')}>View Papers</a>
     </div>
   </section>
 </BaseLayout>

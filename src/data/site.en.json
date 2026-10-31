@@ -11,7 +11,7 @@
     "join": "Join Us"
   },
   "home": {
-    "intro": "One-sentence description of the group: research positioning and team size, around 40-80 words. Replace brand / siteName and this paragraph to establish the first impression.",
+    "intro": "The Cui Mingjian Lab at the School of Electrical and Information Engineering, Tianjin University, focuses on renewable energy forecasting, power system optimal operation, and power system cyber security, with long-standing work on machine learning and deep learning for power systems.",
     "sections": {
       "highlights": "Highlights",
       "recentProjects": "Ongoing Projects"
@@ -19,17 +19,31 @@
     "highlights": [
       {
         "title": "Research Directions",
-        "desc": "List 3-4 main research directions, one sentence each on what problem is studied. Visitors usually judge fit against this section first."
+        "desc": "Four pillars: renewable energy forecasting, power system optimal operation, power system cyber security, and AI — tackling core scientific and engineering problems under high renewable penetration."
       },
       {
         "title": "Recent Outputs",
-        "desc": "Summarize representative outputs from the past two years: papers at specific venues, granted patents, delivered systems. Avoid padding with raw counts."
+        "desc": "Continuous papers in IEEE Transactions on Power Systems / Smart Grid / Sustainable Energy (Q1), with the PI listed among the World's Top 2% Scientists in 2023 and 2024."
       },
       {
         "title": "Recruitment & Collaboration",
-        "desc": "Actively recruiting master's and PhD students as well as undergraduate research interns, and open to joint projects and joint training with industry and institutes."
+        "desc": "Actively recruiting master's and PhD students (3–4 per year) and undergraduate research interns; open to industry collaboration and joint training."
       }
     ],
-    "quick": "Quick Links"
+    "quick": "Quick Links",
+    "quickLinks": [
+      { "label": "Members", "href": "/members/", "icon": "members" },
+      { "label": "Projects", "href": "/projects/", "icon": "projects" },
+      { "label": "Publications", "href": "/papers/", "icon": "papers" },
+      { "label": "News", "href": "/news/", "icon": "news" },
+      { "label": "Lab & Equipment", "href": "/life/", "icon": "life" },
+      { "label": "Recruitment", "href": "/join/", "icon": "join" }
+    ],
+    "platform": {
+      "title": "Affiliation",
+      "school": "Tianjin University · School of Electrical and Information Engineering",
+      "desc": "The lab is based in the School of Electrical and Information Engineering, Tianjin University, working on renewable forecasting, power system operation, and cyber security, with interdisciplinary and international collaboration in frontiers such as energy storage.",
+      "tags": ["Tianjin University", "School of Electrical & Information Eng.", "Energy Storage · Interdisciplinary"]
+    }
   }
 }

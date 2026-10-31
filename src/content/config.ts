@@ -74,23 +74,6 @@ const members = defineCollection({
   })
 });
 
-const projects = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string().min(1).optional(),
-    tag: z.string().min(1).optional(),
-    time: z.string().min(1).optional(),
-    status: z.string().min(1).optional(),
-    links: z
-      .object({
-        repo: z.string().min(1).optional(),
-        demo: z.string().min(1).optional(),
-        paper: z.string().min(1).optional()
-      })
-      .optional()
-  })
-});
-
 const join = defineCollection({
   type: 'content',
   schema: z.object({
@@ -105,4 +88,4 @@ const life = defineCollection({
   })
 });
 
-export const collections = { news, papers, members, projects, join, life };
+export const collections = { news, papers, members, join, life };

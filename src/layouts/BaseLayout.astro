@@ -21,7 +21,7 @@ const {
   lang = 'zh',
   pathPrefix = '',
   ogType = 'website',
-  ogImage = '/images/DDLab_logo.png',
+  ogImage = '/images/tju_badge_blue.svg',
   noindex = false,
   disableCanonical = false,
   disableLocaleAlternates = false,
@@ -119,8 +119,8 @@ const navPathCompare = {
     <meta name="twitter:image" content={ogImageUrl} />
     <ClientRouter />
     <link rel="preload" href={`${base}fonts/inter-var.woff2`} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" type="image/png" href={`${base}images/DDLab_logo.png`} />
-    <link rel="apple-touch-icon" href={`${base}images/DDLab_logo.png`} />
+    <link rel="icon" type="image/svg+xml" href={`${base}images/tju_badge_blue.svg`} />
+    <link rel="apple-touch-icon" href={`${base}images/tju_badge_blue.svg`} />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('lab-theme');
@@ -143,7 +143,10 @@ const navPathCompare = {
   <body>
     <header class="site-header">
       <div class="container nav">
-        <div class="brand">{t.brand}</div>
+        <a class="brand" href={navPathResolved.home} aria-label={t.siteName}>
+          <img class="brand-badge" src={`${base}images/tju_badge_blue.svg`} alt="天津大学校徽" width="34" height="34" />
+          <span class="brand-text">{lang === 'zh' ? '天津大学 · ' : 'Tianjin University · '}{t.brand}</span>
+        </a>
         <nav class="nav-links">
           <a class={`nav-link ${currentPath === navPathCompare.home ? 'is-active' : ''}`} href={navPathResolved.home}>{t.nav.home}</a>
           <a class={`nav-link ${currentPath.startsWith(navPathCompare.members) ? 'is-active' : ''}`} href={navPathResolved.members}>{t.nav.members}</a>
@@ -164,6 +167,10 @@ const navPathCompare = {
     </main>
     <footer class="footer">
       <div class="container footer-inner">
+        <div class="footer-brand">
+          <img class="footer-badge" src={`${base}images/tju_badge_blue.svg`} alt="天津大学校徽" width="26" height="26" />
+          <span>天津大学 · {t.siteName}</span>
+        </div>
         <span class="lang-switch">
           {lang === 'zh' ? (
             <>

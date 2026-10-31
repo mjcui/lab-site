@@ -29,9 +29,26 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-title);
   font-weight: 760;
   letter-spacing: 0.04em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 22%;
+  display: block;
+  box-shadow: var(--shadow-ring);
+}
+
+.brand-text {
+  white-space: nowrap;
 }
 
 .nav-links {
@@ -70,7 +87,7 @@
 .nav-link:hover,
 .nav-link:focus-visible {
   color: var(--text);
-  background: rgba(125, 167, 255, 0.08);
+  background: rgba(0, 70, 140, 0.1);
 }
 
 .nav-link:hover::after,
@@ -80,7 +97,27 @@
 
 .nav-link.is-active {
   color: var(--text);
-  background: rgba(125, 167, 255, 0.16);
+  background: rgba(0, 70, 140, 0.16);
+}
+
+/* 招生合作：金色 CTA，作为全站核心转化入口 */
+.nav-link-cta {
+  color: var(--accent-gold-ink);
+  background: var(--gradient-gold);
+  font-weight: 640;
+}
+.nav-link-cta::after {
+  display: none;
+}
+.nav-link-cta:hover,
+.nav-link-cta:focus-visible {
+  color: var(--accent-gold-ink);
+  background: linear-gradient(120deg, #f8c34e, #e7b23e);
+  transform: translateY(-1px);
+}
+.nav-link-cta.is-active {
+  color: var(--accent-gold-ink);
+  background: var(--gradient-gold);
 }
 
 .nav-actions {
@@ -102,6 +139,22 @@
   gap: 12px;
   padding: 22px 0 30px;
   flex-wrap: wrap;
+}
+
+.footer-brand {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 640;
+  color: var(--text-soft);
+}
+
+.footer-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 22%;
+  display: block;
 }
 
 .card {
@@ -189,49 +242,6 @@
   transform: translateY(-1px);
 }
 
-.status-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 11px;
-  border-radius: var(--radius-pill);
-  font-size: var(--text-xs);
-  font-weight: 580;
-  letter-spacing: 0.04em;
-  border: 1px solid transparent;
-  transition: border-color var(--motion-fast) var(--ease-standard),
-    background-color var(--motion-fast) var(--ease-standard),
-    color var(--motion-fast) var(--ease-standard),
-    transform var(--motion-fast) var(--ease-standard);
-}
-
-.status-chip:hover {
-  transform: translateY(-1px);
-}
-
-.status-chip.status-current {
-  color: #d6e7ff;
-  background: rgba(87, 146, 255, 0.18);
-  border-color: rgba(118, 170, 255, 0.35);
-}
-
-.status-chip.status-former {
-  color: #dbffe8;
-  background: rgba(64, 182, 129, 0.16);
-  border-color: rgba(98, 206, 153, 0.34);
-}
-
-[data-theme='light'] .status-chip.status-current {
-  color: #1f4f9b;
-  background: rgba(87, 146, 255, 0.18);
-  border-color: rgba(87, 146, 255, 0.38);
-}
-
-[data-theme='light'] .status-chip.status-former {
-  color: #0f6a49;
-  background: rgba(64, 182, 129, 0.2);
-  border-color: rgba(64, 182, 129, 0.4);
-}
 
 .btn {
   position: relative;
@@ -290,6 +300,17 @@
   background: rgba(125, 167, 255, 0.08);
 }
 
+/* 金色按钮：用于招生 / 合作等核心转化动作 */
+.btn-gold {
+  color: var(--accent-gold-ink);
+  background: var(--gradient-gold);
+  border-color: transparent;
+}
+.btn-gold:hover {
+  color: var(--accent-gold-ink);
+  background: linear-gradient(120deg, #f8c34e, #e7b23e);
+}
+
 [data-theme-toggle] {
   min-width: 84px;
   letter-spacing: 0.01em;
@@ -330,6 +351,137 @@
   flex-wrap: wrap;
 }
 
+/* 校徽主导的品牌化 Hero */
+.hero.hero-center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 46px 24px;
+}
+.hero-badge {
+  width: 88px;
+  height: 88px;
+  border-radius: 22%;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-ring);
+}
+.hero-affil {
+  font-size: var(--text-sm);
+  letter-spacing: 0.12em;
+  color: var(--accent-gold);
+  font-weight: 640;
+  margin-bottom: 6px;
+}
+
+/* 带真实校园照片的 Hero */
+.hero.hero-photo {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  color: #fff;
+  border-color: transparent;
+}
+.hero.hero-photo .hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.hero.hero-photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(155deg, rgba(8, 18, 38, 0.86) 0%, rgba(8, 18, 38, 0.5) 48%, rgba(8, 18, 38, 0.82) 100%);
+}
+.hero.hero-photo::after {
+  display: none;
+}
+.hero.hero-photo > * {
+  position: relative;
+  z-index: 2;
+}
+.hero.hero-photo .hero-title {
+  color: #fff;
+}
+.hero.hero-photo .hero-subtitle {
+  color: rgba(255, 255, 255, 0.86);
+}
+.hero.hero-photo .hero-badge {
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
+}
+
+/* 依托平台 / 关于天大电气 */
+.home-about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+.home-about-media {
+  position: relative;
+  min-height: 248px;
+}
+.home-about-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-about-body {
+  padding: 26px 26px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home-about-body .page-head {
+  margin-bottom: 12px;
+}
+.home-about-school {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.home-about-desc {
+  color: var(--text-soft);
+  line-height: 1.75;
+}
+.home-about-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 0;
+}
+.home-about-tags li {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+@media (max-width: 760px) {
+  .home-about {
+    grid-template-columns: 1fr;
+  }
+  .home-about-media {
+    min-height: 200px;
+  }
+}
+
 .meta {
   display: flex;
   align-items: center;
@@ -339,51 +491,85 @@
   color: var(--muted);
 }
 
-.quick-links {
-  margin-top: 14px;
+.quick-grid {
+  margin-top: 16px;
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
-.quick-links a {
-  color: var(--text-soft);
+@media (max-width: 720px) {
+  .quick-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 460px) {
+  .quick-grid { grid-template-columns: 1fr; }
+}
+
+.quick-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard);
+}
+
+.quick-tile:hover,
+.quick-tile:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--surface-1) 70%, #ffffff);
+  box-shadow: 0 14px 30px -16px rgba(0, 70, 140, 0.42);
+  outline: none;
+}
+
+.quick-icon {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  position: relative;
-  padding-bottom: 2px;
-  transition: color var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard);
-}
-
-.quick-links a::before {
-  content: '->';
-  font-family: var(--font-mono);
-  font-size: 11px;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(0, 70, 140, 0.1);
   color: var(--primary);
 }
 
-.quick-links a::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  right: 0;
-  bottom: -1px;
-  height: 1px;
-  border-radius: 999px;
-  background: var(--gradient-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--motion-mid) var(--ease-standard);
+.quick-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
-.quick-links a:hover {
-  color: var(--text);
-  transform: translateX(3px);
+.quick-label {
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
-.quick-links a:hover::after,
-.quick-links a:focus-visible::after {
-  transform: scaleX(1);
+.quick-arrow {
+  flex: 0 0 auto;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--primary);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.quick-tile:hover .quick-arrow,
+.quick-tile:focus-visible .quick-arrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .detail-shell {
@@ -410,6 +596,68 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* 项目详情：横幅图（借鉴 IMSL 研究块的通栏横幅） */
+.detail-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 340;
+  max-height: 300px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+}
+
+.detail-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-banner--gradient {
+  background:
+    radial-gradient(120% 150% at 10% 0%, rgba(224, 169, 46, 0.18), transparent 55%),
+    linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.detail-banner__mark {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.94);
+  background: rgba(8, 17, 32, 0.42);
+  backdrop-filter: blur(6px);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* 期刊 / 分区徽章（学术可信度，参照 IMSL 的期刊标签） */
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  font-weight: 640;
+  letter-spacing: 0.02em;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+}
+
+/* 作者行 */
+.detail-authors {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: var(--text-sm);
+  letter-spacing: 0.01em;
 }
 
 .paper-authors {
@@ -475,6 +723,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* 全局锚点平滑滚动 */
+html {
+  scroll-behavior: smooth;
 }
 
 .member-email {
