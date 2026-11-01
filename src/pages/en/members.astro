@@ -6,7 +6,7 @@ import { resolveMemberAvatar } from '../../utils/member-avatar';
 import { pickI18nText } from '../../utils/i18n-text';
 
 const memberEntries = await getCollection('members');
-const roleOrder = ['PI', 'PhD', 'Master', 'RA'];
+const roleOrder = ['Professor, Doctoral Supervisor', 'PhD', 'Master', 'RA'];
 const roleRank = new Map(roleOrder.map((role, index) => [role, index]));
 const currentStatuses = ['Current', 'Active'];
 const formerStatuses = ['Alumni', 'Former'];
@@ -51,13 +51,6 @@ function resolveStatusGroup(roleEn: string, statusEn: string) {
   return 1;
 }
 
-function resolveStatusTone(statusEn: string) {
-  if (formerStatuses.includes(statusEn)) {
-    return 'former';
-  }
-  return 'current';
-}
-
 const membersWithId = memberEntries
   .map((e) => ({
     ...e.data,
@@ -77,67 +70,63 @@ const membersWithId = memberEntries
     const rankB = getRoleRankEn(b.role.en);
     return rankA - rankB || a.nameText.localeCompare(b.nameText);
   });
-const roleSet = new Set(membersWithId.map((m) => m.role.en));
-const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
-const roles = ['All', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
-const pageDesc = 'Browse our lab members, roles, research areas, and current status.';
 
+const groupDefsEn = [
+  { key: 'Professor, Doctoral Supervisor', title: 'Faculty' },
+  { key: 'PhD Student', title: 'PhD Students' },
+  { key: 'Master Student', title: 'Master Students' },
+];
+const memberGroups = groupDefsEn
+  .filter((g) => membersWithId.some((m) => m.role.en === g.key))
+  .map((g) => ({ ...g, members: membersWithId.filter((m) => m.role.en === g.key) }));
+const pageDesc = 'Browse our lab members and role groups.';
 ---
+
 <BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Members</h1>
   </section>
 
-  <section class="filter-wrap" data-members-filter-root data-reveal>
-    <input
-      class="filter-input"
-      type="search"
-      data-member-search
-      placeholder="Search name / area / role..."
-      aria-label="Search members"
-    />
-
-    <div class="filter-tags">
-      {roles.map((role, i) => (
-        <button
-          class={`filter-tag ${i === 0 ? 'is-selected' : ''}`}
-          type="button"
-          data-role-filter={i === 0 ? '__all' : role.toLowerCase()}
-        >
-          {role}
-        </button>
-      ))}
-    </div>
-
-    <p class="empty-state" data-empty-state hidden>No matching member found. Try another keyword or role.</p>
-
-    <div class="grid grid-3" data-reveal-group>
-      {membersWithId.map((m, i) => (
-        <a
-          href={b(`/en/members/${m.id}/`)}
-          class="card card-hover card-link member-card"
-          data-member-card
-          data-name={m.nameText}
-          data-role={m.role.en}
-          data-area={m.areaText}
-          data-reveal
-          data-reveal-order={String(i)}
-        >
-          {m.statusText && !isLeadRoleEn(m.role.en) && (
-            <span class={`member-status status-${resolveStatusTone(m.statusText)}`}>{m.statusText}</span>
-          )}
-          <img
-            class="member-avatar"
-            src={m.avatarResolved}
-            alt={`${m.nameText} avatar`}
-            loading="lazy"
-            decoding="async"
-          />
-          <h3>{m.nameText}</h3>
-          <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
-          <p class="mt-4">{m.areaText}</p>
-        </a>
-      ))}
-    </div>
+  <section class="members-groups">
+    {memberGroups.map((group) => (
+      <div class="member-group" data-reveal>
+        <h2 class="member-group-title">{group.title}</h2>
+        <div class="grid grid-3">
+          {group.members.map((m) => (
+            <a
+              href={b(`/en/members/${m.id}/`)}
+              class="card card-hover card-link member-card"
+              data-reveal
+            >
+              <img
+                class="member-avatar"
+                src={m.avatarResolved}
+                alt={`${m.nameText} avatar`}
+                loading="lazy"
+                decoding="async"
+              />
+              <h3>{m.nameText}</h3>
+              <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
   </section>
 </BaseLayout>
+
+<style>
+  .members-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .member-group-title {
+    font-size: 1.3rem;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+    margin: 0 0 18px;
+    font-weight: 700;
+  }
+</style>

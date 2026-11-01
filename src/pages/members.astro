@@ -6,7 +6,7 @@ import { resolveMemberAvatar } from '../utils/member-avatar';
 import { pickI18nText } from '../utils/i18n-text';
 
 const memberEntries = await getCollection('members');
-const roleOrder = ['负责人 (PI)', '博士生', '硕士生', '研究助理'];
+const roleOrder = ['教授、博士生导师', '博士生', '硕士生', '研究助理'];
 const roleRank = new Map(roleOrder.map((role, index) => [role, index]));
 const currentStatuses = ['在读', '在职'];
 const formerStatuses = ['已毕业', '已离开'];
@@ -51,13 +51,6 @@ function resolveStatusGroup(roleZh: string, statusZh: string) {
   return 1;
 }
 
-function resolveStatusTone(statusZh: string) {
-  if (formerStatuses.includes(statusZh)) {
-    return 'former';
-  }
-  return 'current';
-}
-
 const membersWithId = memberEntries
   .map((e) => ({
     ...e.data,
@@ -65,7 +58,7 @@ const membersWithId = memberEntries
     nameText: pickI18nText(e.data.name, 'zh'),
     areaText: pickI18nText(e.data.area, 'zh'),
     statusText: pickI18nText(e.data.status, 'zh'),
-    avatarResolved: resolveMemberAvatar(e.data),
+    avatarResolved: resolveMemberAvatar({ ...e.data, id: e.slug }),
   }))
   .sort((a, b) => {
     const groupA = resolveStatusGroup(a.role.zh, a.statusText);
@@ -77,67 +70,63 @@ const membersWithId = memberEntries
     const rankB = getRoleRankZh(b.role.zh);
     return rankA - rankB || a.nameText.localeCompare(b.nameText);
   });
-const roleSet = new Set(membersWithId.map((m) => m.role.zh));
-const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
-const roles = ['全部', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
-const pageDesc = '查看课题组成员列表、研究方向与当前状态。';
 
+const groupDefsZh = [
+  { key: '教授、博士生导师', title: '导师' },
+  { key: '博士生', title: '博士生' },
+  { key: '硕士生', title: '硕士生' },
+];
+const memberGroups = groupDefsZh
+  .filter((g) => membersWithId.some((m) => m.role.zh === g.key))
+  .map((g) => ({ ...g, members: membersWithId.filter((m) => m.role.zh === g.key) }));
+const pageDesc = '查看课题组成员列表与角色分组。';
 ---
+
 <BaseLayout title="成员" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>
     <h1 class="page-title">成员列表</h1>
   </section>
 
-  <section class="filter-wrap" data-members-filter-root data-reveal>
-    <input
-      class="filter-input"
-      type="search"
-      data-member-search
-      placeholder="搜索 name / area / role..."
-      aria-label="搜索成员"
-    />
-
-    <div class="filter-tags">
-      {roles.map((role, i) => (
-        <button
-          class={`filter-tag ${i === 0 ? 'is-selected' : ''}`}
-          type="button"
-          data-role-filter={i === 0 ? '__all' : role.toLowerCase()}
-        >
-          {role}
-        </button>
-      ))}
-    </div>
-
-    <p class="empty-state" data-empty-state hidden>没有匹配成员，请调整关键词或筛选条件。</p>
-
-    <div class="grid grid-3" data-reveal-group>
-      {membersWithId.map((m, i) => (
-        <a
-          href={b(`/members/${m.id}/`)}
-          class="card card-hover card-link member-card"
-          data-member-card
-          data-name={m.nameText}
-          data-role={m.role.zh}
-          data-area={m.areaText}
-          data-reveal
-          data-reveal-order={String(i)}
-        >
-          {m.statusText && !isLeadRoleZh(m.role.zh) && (
-            <span class={`member-status status-${resolveStatusTone(m.statusText)}`}>{m.statusText}</span>
-          )}
-          <img
-            class="member-avatar"
-            src={m.avatarResolved}
-            alt={`${m.nameText} 头像`}
-            loading="lazy"
-            decoding="async"
-          />
-          <h3>{m.nameText}</h3>
-          <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
-          <p class="mt-4">{m.areaText}</p>
-        </a>
-      ))}
-    </div>
+  <section class="members-groups">
+    {memberGroups.map((group) => (
+      <div class="member-group" data-reveal>
+        <h2 class="member-group-title">{group.title}</h2>
+        <div class="grid grid-3">
+          {group.members.map((m) => (
+            <a
+              href={b(`/members/${m.id}/`)}
+              class="card card-hover card-link member-card"
+              data-reveal
+            >
+              <img
+                class="member-avatar"
+                src={m.avatarResolved}
+                alt={`${m.nameText} 头像`}
+                loading="lazy"
+                decoding="async"
+              />
+              <h3>{m.nameText}</h3>
+              <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
   </section>
 </BaseLayout>
+
+<style>
+  .members-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .member-group-title {
+    font-size: 1.3rem;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+    margin: 0 0 18px;
+    font-weight: 700;
+  }
+</style>

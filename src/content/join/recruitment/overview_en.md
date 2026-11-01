@@ -2,38 +2,33 @@
 title: "Recruitment & Collaboration"
 ---
 
-## Recruitment
+## Recruitment Directions
 
-The group welcomes applications for **master's** and **PhD programs**, and offers research internships to senior undergraduate students.
+The group welcomes applications from **master's** and **PhD students** across disciplines, focusing on the following directions:
 
-<!--
-[To be replaced — do not publish with placeholders still in place]
+- **Renewable energy power forecasting**: short-term and ultra-short-term wind and solar power forecasting, ramp-event and probabilistic scenario prediction.
+- **Power system optimal operation**: optimal dispatch and resilient operation of distribution networks and microgrids under high renewable penetration.
+- **Power system cyber security**: false data injection attack (FDIA) detection, privacy-preserving state estimation, and federated learning.
+- **AI applications in power systems**: reinforcement-learning frequency control, deep-learning load modeling, and anomaly detection.
 
-1. Research topics: list 2-4 concrete directions. For each, state in one sentence what problem is studied and what the student will actually do.
-2. Capacity: state how many students are accepted per year, program duration, and whether early contact is expected.
-3. Requirements: academic prerequisites, required skills, whether a CV or transcript should be attached, and how far in advance to apply.
-4. Undergraduate research: state eligibility explicitly; internships are usually arranged during winter/summer breaks or in the final year.
--->
+## Application Requirements
+
+- **Academic background**: electrical engineering, mathematics, communications, automation, or related fields.
+- **Skills**: a solid mathematical foundation and proficient programming (Python / MATLAB / C), with good English reading and writing ability.
+- **Personal qualities**: curiosity for frontier problems, integrity, and a collaborative team spirit.
+- **Contact early**: prospective students are encouraged to reach out by email as early as possible; undergraduates may join research internships during winter/summer breaks or their final-year project.
+
+## Quota & Timeline
+
+- We admit **3–4 master's and PhD students per year** (subject to the quotas assigned by the university each year).
 
 ## Collaboration
 
-We welcome collaboration with industry and research institutions on joint projects and joint training programs.
-
-<!--
-[To be replaced]
-- Collaboration formats: commissioned projects, technology development, joint labs, joint training.
-- Process: describe steps from first contact to agreement signing, with an approximate timeline.
-- Contact person: give one named contact with an email so prospective partners do not have to ask around.
--->
+- We welcome **industry collaboration, technology development, and joint training** with enterprises and research institutes.
+- The group actively pursues international collaboration with leading overseas universities and research institutions, emphasizing multidisciplinary convergence.
 
 ## Contact
 
-- **Email**: mjcui@tju.edu.cn
-- **Address**: to be added (campus / building / room number)
-- **Office hours**: to be added
-
-<!--
-[To be replaced]
-The email is filled in. The address and office hours must be completed before launch;
-missing address information noticeably reduces credibility for prospective students and partners.
--->
+- **Email**: mj_cui@tju.edu.cn
+- **Address**: School of Electrical Automation and Information Engineering, Tianjin University, Building 26, Zone D, No. 92 Weijin Road, Nankai District, Tianjin, China
+- **Office hours**: Weekdays

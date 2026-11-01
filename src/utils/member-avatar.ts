@@ -9,6 +9,7 @@ const AVATAR_EXTS = ['png', 'jpg', 'jpeg', 'svg'] as const;
 type MemberLike = {
   name: string | { zh?: string; en?: string };
   avatar?: string;
+  id?: string;
 };
 
 export function resolveMemberAvatar(member: MemberLike): string {
@@ -20,7 +21,10 @@ export function resolveMemberAvatar(member: MemberLike): string {
     ? [member.name]
     : [member.name.zh || '', member.name.en || ''];
   const candidateNames = Array.from(
-    new Set(rawNames.map((item) => item.trim()).filter(Boolean))
+    new Set([
+      ...(member.id ? [member.id] : []),
+      ...rawNames.map((item) => item.trim()).filter(Boolean),
+    ])
   );
 
   if (!candidateNames.length) {

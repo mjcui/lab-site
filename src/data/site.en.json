@@ -36,7 +36,6 @@
       { "label": "Projects", "href": "/projects/", "icon": "projects" },
       { "label": "Publications", "href": "/papers/", "icon": "papers" },
       { "label": "News", "href": "/news/", "icon": "news" },
-      { "label": "Lab & Equipment", "href": "/life/", "icon": "life" },
       { "label": "Recruitment", "href": "/join/", "icon": "join" }
     ],
     "platform": {

@@ -36,7 +36,6 @@
       { "label": "项目展示", "href": "/projects/", "icon": "projects" },
       { "label": "论文列表", "href": "/papers/", "icon": "papers" },
       { "label": "新闻动态", "href": "/news/", "icon": "news" },
-      { "label": "实验室与设备", "href": "/life/", "icon": "life" },
       { "label": "招生与合作", "href": "/join/", "icon": "join" }
     ],
     "platform": {

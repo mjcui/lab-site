@@ -372,6 +372,7 @@
   color: var(--accent-gold);
   font-weight: 640;
   margin-bottom: 6px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
 }
 
 /* 带真实校园照片的 Hero */
@@ -391,13 +392,16 @@
   height: 100%;
   object-fit: cover;
   z-index: 0;
+  /* 削弱背景图的浓烈色彩与明度，让文字成为主体 */
+  filter: saturate(0.68) brightness(0.94);
 }
 .hero.hero-photo::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(155deg, rgba(8, 18, 38, 0.86) 0%, rgba(8, 18, 38, 0.5) 48%, rgba(8, 18, 38, 0.82) 100%);
+  /* 均匀柔和的北洋蓝暗化遮罩，底部略加深以盖住亮带，避免背景漏色抢戏 */
+  background: linear-gradient(180deg, rgba(9, 20, 42, 0.6) 0%, rgba(9, 20, 42, 0.54) 45%, rgba(9, 20, 42, 0.66) 100%);
 }
 .hero.hero-photo::after {
   display: none;
@@ -408,9 +412,25 @@
 }
 .hero.hero-photo .hero-title {
   color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 .hero.hero-photo .hero-subtitle {
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+}
+/* hero 照片背景上的 ghost 按钮改为浅色，弱化存在感、让文字清晰 */
+.hero.hero-photo .btn-ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+.hero.hero-photo .btn-ghost:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.22);
 }
 .hero.hero-photo .hero-badge {
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);

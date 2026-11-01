@@ -11,7 +11,7 @@ export async function getStaticPaths() {
     const id = entry.data.id ?? entry.slug;
     return {
       params: { id },
-      props: { member: { ...entry.data, id, avatarResolved: resolveMemberAvatar(entry.data) } },
+      props: { member: { ...entry.data, id, avatarResolved: resolveMemberAvatar({ ...entry.data, id }) } },
     };
   });
 }

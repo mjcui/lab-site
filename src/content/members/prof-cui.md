@@ -4,8 +4,8 @@ name:
   zh: "崔明建"
   en: "Cui Mingjian"
 role:
-  zh: "负责人 (PI)"
-  en: "PI"
+  zh: "教授、博士生导师"
+  en: "Professor, Doctoral Supervisor"
 area:
   zh: "新能源预测 · 电力系统优化运行 · 网络安全 · 人工智能"
   en: "Renewable Forecasting · Power System Operation · Cyber Security · AI"
@@ -23,4 +23,4 @@ links:
 
 代表性奖励包括 2017 年 IEEE PES General Meeting 最佳会议论文奖（Best Paper Award）、2020 年「领跑者 5000（F5000）— 中国精品科技期刊顶尖学术论文」等。
 
-课题组依托天津大学国家储能技术产教融合创新平台，注重多学科交叉与国际合作，常年招收硕士、博士研究生及本科生科研实习。
+课题组注重多学科交叉与国际合作，常年招收硕士、博士研究生及本科生科研实习。
