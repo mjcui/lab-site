@@ -57,6 +57,9 @@ const membersWithId = memberEntries
     id: e.data.id ?? e.slug,
     nameText: pickI18nText(e.data.name, 'en'),
     areaText: pickI18nText(e.data.area, 'en'),
+    honorText: pickI18nText(e.data.honor, 'en'),
+    honorChips: (pickI18nText(e.data.honor, 'en') || '').split(/[、,]/).map((s) => s.trim()).filter(Boolean),
+    researchText: pickI18nText(e.data.research, 'en'),
     statusText: pickI18nText(e.data.status, 'en'),
     avatarResolved: resolveMemberAvatar(e.data),
   }))
@@ -77,15 +80,23 @@ function displayGroupEn(roleEn: string, statusEn: string) {
   if (formerStatuses.includes(statusEn)) return 'Graduates';
   return roleEn; // 'PhD Student' / 'Master Student' / 'RA'
 }
-const leadMember = membersWithId.find((m) => isLeadRoleEn(m.role.en));
-const nonLeadMembers = membersWithId.filter((m) => !isLeadRoleEn(m.role.en));
-const groupOrderEn = ['PhD Student', 'Master Student', 'RA', 'Graduates'];
+// Fall back to identity flags so the PI never disappears when role wording changes.
+function isLeadMember(m: (typeof membersWithId)[number]) {
+  if (m.id === 'prof-cui') return true;
+  if (m.honorLines) return true;
+  return isLeadRoleEn(m.role?.en ?? '');
+}
+const leadMember = membersWithId.find(isLeadMember);
+const nonLeadMembers = membersWithId.filter((m) => !isLeadMember(m));
+// 'Faculty' is a fallback group so the PI never vanishes from the list.
+const groupOrderEn = ['Faculty', 'PhD Student', 'Master Student', 'Undergraduate', 'RA', 'Graduates'];
 const memberGroups = groupOrderEn
   .filter((key) => nonLeadMembers.some((m) => displayGroupEn(m.role.en, m.statusText) === key))
   .map((key) => {
     const title =
       key === 'PhD Student' ? 'PhD Students' :
       key === 'Master Student' ? 'Master Students' :
+      key === 'Undergraduate' ? 'Undergraduates' :
       key === 'RA' ? 'Research Assistants' :
       key;
     return { title, members: nonLeadMembers.filter((m) => displayGroupEn(m.role.en, m.statusText) === key) };
@@ -114,23 +125,28 @@ const pageDesc = 'Browse our lab members and role groups.';
         class="member-hero"
         data-member-card
         data-name={leadMember.nameText}
-        data-area={leadMember.areaText}
+        data-area={leadMember.honorText || leadMember.areaText}
         data-role={leadMember.role.en}
         data-reveal
       >
-        <img
-          class="member-hero-avatar"
-          src={leadMember.avatarResolved}
-          alt={`${leadMember.nameText} avatar`}
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="member-hero-media">
+          <img
+            class="member-hero-avatar"
+            src={leadMember.avatarResolved}
+            alt={`${leadMember.nameText} avatar`}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
         <div class="member-hero-body">
           <h2 class="member-hero-name">{leadMember.nameText}</h2>
           <p class="member-hero-role">{leadMember.role.en}</p>
-          <p class="member-hero-area">{leadMember.areaText}</p>
+          <div class="member-hero-chips">
+            {leadMember.honorChips.map((c) => <span class="member-hero-chip">{c}</span>)}
+          </div>
+          {leadMember.researchText && <p class="member-hero-bio">{leadMember.researchText}</p>}
           <div class="member-hero-links">
-            <a class="member-hero-link" href={b(`/en/members/${leadMember.id}/`)}>Profile</a>
+            <a class="member-hero-link is-primary" href={b(`/en/members/${leadMember.id}/`)}>Profile →</a>
             {leadMember.links?.email && (
               <a class="member-hero-link" href={`mailto:${leadMember.links.email}`}>Email</a>
             )}

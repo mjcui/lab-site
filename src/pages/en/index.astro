@@ -6,6 +6,8 @@ import Badge from '../../components/Badge.astro';
 import siteEn from '../../data/site.en.json';
 import { getCollection } from 'astro:content';
 import { buildLocalizedNews } from '../../utils/news-localized';
+import { resolveMemberAvatar } from '../../utils/member-avatar';
+import { pickI18nText } from '../../utils/i18n-text';
 
 const t = siteEn;
 
@@ -14,7 +16,17 @@ const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.en);
 const latest = items.slice(0, 3);
 
 const paperCount = (await getCollection('papers')).length;
-const memberCount = (await getCollection('members')).length;
+const memberEntriesAll = await getCollection('members');
+const memberCount = memberEntriesAll.length;
+const piKeywordsEn = ['pi', 'advisor', 'professor', 'supervisor', 'faculty', 'director', 'lead'];
+const piMember = memberEntriesAll
+  .map((e) => ({ ...e.data, id: e.data.id ?? e.slug }))
+  .find((m) => piKeywordsEn.some((k) => (m.role?.en || '').toLowerCase().includes(k)));
+const piName = piMember ? pickI18nText(piMember.name, 'en') : '';
+const piRole = piMember ? pickI18nText(piMember.role, 'en') : '';
+const piHonor = piMember ? pickI18nText(piMember.honor, 'en') : '';
+const piAvatar = piMember ? resolveMemberAvatar(piMember) : '';
+const piHref = piMember ? b(`/en/members/${piMember.id}/`) : b('/en/members/');
 const stats = [
   { value: String(paperCount), label: 'Publications' },
   { value: String(memberCount), label: 'Members' },
@@ -41,7 +53,7 @@ const researchIcons: Record<string, string> = {
     </div>
     <div class="hero-split__panel">
       <Badge class="hero-badge" variant="blue" />
-      <div class="hero-affil">Tianjin University · School of Electrical and Information Engineering</div>
+      <div class="hero-affil">Tianjin University School of Electrical and Information Engineering</div>
       <h1 class="hero-title">{t.siteName}</h1>
       <p class="hero-subtitle">{t.home.intro}</p>
       <div class="hero-actions">
@@ -53,9 +65,23 @@ const researchIcons: Record<string, string> = {
     </div>
   </section>
 
+  {piMember && (
+    <section class="home-pi" data-reveal>
+      <div class="home-pi-media">
+        <img src={piAvatar} alt={`${piName} avatar`} />
+      </div>
+      <div class="home-pi-body">
+        <div class="home-pi-eyebrow">Principal Investigator</div>
+        <h2 class="home-pi-name">{piName}<span class="home-pi-role">{piRole}</span></h2>
+        <p class="home-pi-honor">{piHonor}</p>
+        <a class="btn btn-gold home-pi-cta" href={piHref}>Visit PI Profile →</a>
+      </div>
+    </section>
+  )}
+
   <section class="card home-about mb-5" data-reveal>
     <div class="home-about-media">
-      <img src={asset('/images/smart-grid-lab.webp')} alt="Key Laboratory of Smart Grid (Ministry of Education) · Microgrid International Cooperation Base" loading="lazy" decoding="async" />
+      <img src={asset('/images/smart-grid-lab.webp')} alt="Key Laboratory of Smart Grid (Ministry of Education) Microgrid International Cooperation Base" loading="lazy" decoding="async" />
     </div>
     <div class="home-about-body">
       <div class="page-head"><h2 class="page-title">{t.home.platform.title}</h2></div>

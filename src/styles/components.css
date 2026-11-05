@@ -466,7 +466,7 @@
 .hero-split::after { display: none; }
 .hero-split__media {
   position: relative;
-  min-height: 440px;
+  min-height: 340px;
   overflow: hidden;
 }
 .hero-split__media img {
@@ -478,36 +478,41 @@
 }
 .hero-split__panel {
   background: var(--surface-1);
-  padding: 52px 44px;
+  padding: 32px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   text-align: left;
 }
-.hero-split__panel .hero-badge { margin-bottom: 18px; }
+.hero-split__panel .hero-badge {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 12px;
+}
 .hero-split__panel .hero-affil {
   color: var(--accent-gold);
   font-weight: 600;
   text-shadow: none;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .hero-split__panel .hero-title {
   color: var(--primary);
   text-shadow: none;
-  font-size: clamp(28px, 3.6vw, 40px);
+  font-size: clamp(26px, 3.2vw, 36px);
   line-height: 1.15;
 }
 .hero-split__panel .hero-subtitle {
   color: var(--text-secondary);
   text-shadow: none;
-  margin-top: 14px;
+  margin-top: 10px;
+  line-height: 1.65;
 }
-.hero-split__panel .hero-actions { margin-top: 24px; }
+.hero-split__panel .hero-actions { margin-top: 18px; }
 @media (max-width: 820px) {
   .hero-split { grid-template-columns: 1fr; }
-  .hero-split__media { min-height: 260px; }
-  .hero-split__panel { padding: 36px 26px; }
+  .hero-split__media { min-height: 240px; }
+  .hero-split__panel { padding: 32px 26px; }
 }
 
 /* 依托平台 / 关于天大电气 */
@@ -690,6 +695,100 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* 成员详情页 PI Hero：官方对齐式（左圆形头像 + 右信息 + 描边按钮） */
+.pi-hero {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+  padding: 32px 36px;
+}
+
+.pi-hero-avatar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pi-hero-avatar {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 4px solid var(--primary);
+  background: var(--primary);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.pi-hero-body {
+  min-width: 0;
+}
+
+.pi-hero-name {
+  margin: 0;
+  font-size: clamp(28px, 3.2vw, 38px);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.01em;
+}
+
+.pi-hero-role {
+  margin-top: 6px;
+  font-size: var(--text-md);
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.pi-hero-honors {
+  margin-top: 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.pi-hero-honor-line {
+  font-size: var(--text-sm);
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.pi-hero-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pi-hero-actions .btn {
+  color: var(--primary-2);
+  border-color: color-mix(in srgb, var(--primary) 48%, transparent);
+  background: var(--surface-2);
+}
+
+.pi-hero-actions .btn:hover {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+@media (max-width: 720px) {
+  .pi-hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 26px 22px;
+  }
+  .pi-hero-avatar {
+    width: 108px;
+    height: 108px;
+  }
+  .pi-hero-actions {
+    justify-content: center;
+  }
 }
 
 /* 项目详情：横幅图（借鉴 IMSL 研究块的通栏横幅） */
@@ -1000,37 +1099,45 @@ html {
 
 .member-hero {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 14px;
+  gap: 0;
   border: 1px solid var(--line);
   border-top: 4px solid var(--primary);
   border-radius: var(--radius-card);
-  padding: 26px 22px;
-  background: linear-gradient(165deg, var(--surface-1), var(--surface-2));
+  overflow: hidden;
+  background: var(--surface-1);
   box-shadow: var(--shadow-sm);
 }
 
+.member-hero-media {
+  flex: 0 0 32%;
+  background: linear-gradient(150deg, var(--primary), var(--primary-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
 .member-hero-avatar {
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
-  border: 1px solid var(--line-strong);
+  border: 4px solid #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
   flex: 0 0 auto;
-  background: rgba(125, 167, 255, 0.18);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .member-hero-body {
   min-width: 0;
   flex: 1;
-  text-align: center;
+  padding: 26px 30px;
+  text-align: left;
 }
 
 .member-hero-name {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 700;
   margin: 0;
   color: var(--text);
@@ -1039,23 +1146,38 @@ html {
 .member-hero-role {
   font-size: var(--text-sm);
   color: var(--primary);
-  margin: 4px 0 8px;
+  margin: 4px 0 12px;
   font-weight: 600;
 }
 
-.member-hero-area {
+.member-hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.member-hero-chip {
+  font-size: var(--text-xs);
+  color: var(--primary);
+  background: rgba(0, 70, 140, 0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  line-height: 1.4;
+}
+
+.member-hero-bio {
   font-size: var(--text-sm);
   color: var(--muted);
-  margin: 0;
-  line-height: 1.6;
+  margin: 0 0 16px;
+  line-height: 1.65;
 }
 
 .member-hero-links {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 12px;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .member-hero-link {
@@ -1063,7 +1185,7 @@ html {
   color: var(--primary);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
-  padding: 5px 12px;
+  padding: 6px 14px;
   text-decoration: none;
   transition: all var(--motion-fast) var(--ease-standard);
 }
@@ -1073,14 +1195,27 @@ html {
   background: rgba(0, 70, 140, 0.06);
 }
 
+.member-hero-link.is-primary {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold-ink);
+  font-weight: 700;
+}
+
+.member-hero-link.is-primary:hover {
+  background: var(--accent-gold-bright);
+  border-color: var(--accent-gold-bright);
+}
+
 @media (max-width: 560px) {
   .member-hero {
     flex-direction: column;
-    text-align: center;
-    gap: 12px;
   }
-  .member-hero-links {
-    justify-content: center;
+  .member-hero-media {
+    padding: 24px;
+  }
+  .member-hero-body {
+    text-align: left;
   }
 }
 
@@ -1463,24 +1598,54 @@ html {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  margin: 14px 0 20px;
+  margin: 14px 0 0;
 }
 .news-detail-cover {
   position: relative;
   width: 100%;
-  aspect-ratio: 1200 / 380;
-  max-height: 360px;
+  aspect-ratio: 1200 / 200;
+  max-height: 190px;
   border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--bg-elevated);
   border: 1px solid var(--line);
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
 .news-detail-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+/* 新闻详情页正文：多图收敛为两列小画廊，文字段落仍通栏阅读 */
+.news-detail-body > p {
+  margin: 0;
+}
+.news-detail-body > p:has(> img) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.news-detail-body > p:has(> img:only-child) {
+  grid-template-columns: minmax(0, 560px);
+  justify-content: center;
+}
+.news-detail-body > p:has(> img) img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  max-width: 100%;
+  margin: 0;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+@media (max-width: 640px) {
+  .news-detail-body > p:has(> img),
+  .news-detail-body > p:has(> img:only-child) {
+    grid-template-columns: 1fr;
+  }
 }
 .news-detail-cover__ph {
   position: absolute;
@@ -1536,7 +1701,97 @@ html {
   line-height: 1.4;
 }
 
-/* ===== 首页新结构（方案 A · 焦点研究型） ===== */
+/* ===== 首页 PI 焦点横幅（方案 A） ===== */
+.home-pi {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--gradient-accent);
+  box-shadow: 0 12px 30px rgba(0, 60, 130, 0.22);
+  margin-bottom: 24px;
+}
+
+.home-pi-media {
+  flex: 0 0 auto;
+  padding: 24px 6px 24px 26px;
+}
+
+.home-pi-media img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 3px solid #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.home-pi-body {
+  flex: 1;
+  min-width: 0;
+  color: #fff;
+  padding: 22px 28px 22px 0;
+}
+
+.home-pi-eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.home-pi-name {
+  font-size: 1.55rem;
+  font-weight: 800;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.home-pi-role {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  opacity: 0.92;
+}
+
+.home-pi-honor {
+  color: #fff;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  opacity: 1;
+  margin: 8px 0 16px;
+  line-height: 1.65;
+}
+
+.home-pi-cta {
+  margin-top: 2px;
+}
+
+@media (max-width: 600px) {
+  .home-pi {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .home-pi-media {
+    padding: 22px 0 0;
+  }
+  .home-pi-body {
+    padding: 0 22px 24px;
+  }
+  .home-pi-name {
+    justify-content: center;
+  }
+}
+
+/* ===== 首页新结构（方案 A 焦点研究型） ===== */
 .home-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

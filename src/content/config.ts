@@ -6,6 +6,17 @@ const i18nText = z.object({
   en: z.string().min(1)
 });
 
+const bilingualList = z.object({
+  zh: z.array(z.string()),
+  en: z.array(z.string())
+});
+
+const timelineEntry = z.object({
+  period: z.string().min(1),
+  org: z.string().min(1),
+  note: z.string().optional()
+});
+
 const newsDate = z.preprocess((value) => {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return value.toISOString().slice(0, 10);
@@ -63,7 +74,16 @@ const members = defineCollection({
       en: z.string().min(1)
     }),
     status: z.union([z.string().min(1), i18nText]).optional(),
-    area: z.union([z.string().min(1), i18nText]),
+    area: z.union([z.string().min(1), i18nText]).optional(),
+    honor: i18nText.optional(),
+    honorLines: bilingualList.optional(),
+    research: i18nText.optional(),
+    researchTags: bilingualList.optional(),
+    editorial: bilingualList.optional(),
+    awards: bilingualList.optional(),
+    projects: bilingualList.optional(),
+    experience: z.object({ zh: z.array(timelineEntry), en: z.array(timelineEntry) }).optional(),
+    education: z.object({ zh: z.array(timelineEntry), en: z.array(timelineEntry) }).optional(),
     avatar: z.string().min(1).optional(),
     bio: z.union([z.string().min(1), i18nText]).optional(),
     links: z

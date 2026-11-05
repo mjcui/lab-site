@@ -17,7 +17,7 @@ const pageDesc = 'Browse our lab papers and publication metadata.';
 <BaseLayout title="Papers" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Papers</h1>
-    <p class="page-sub">{papers.length} selected publications · {years.length} years</p>
+    <p class="page-sub">{papers.length} selected publications {years.length} years</p>
   </section>
 
   <section class="filter-wrap" data-list-filter-root data-reveal>
@@ -52,7 +52,7 @@ const pageDesc = 'Browse our lab papers and publication metadata.';
                     {hasLink && <span class="paper-link-ico" aria-hidden="true">↗</span>}
                   </div>
                   <h3 class="paper-title">{p.title}</h3>
-                  <p class="paper-meta">{p.venue}{p.authors ? ` · ${p.authors}` : ''}</p>
+                  <p class="paper-meta">{p.venue}{p.authors ? ` ${p.authors}` : ''}</p>
                 </a>
               );
             })}

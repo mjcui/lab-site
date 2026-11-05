@@ -189,7 +189,7 @@ export function summarizeParts(parts: Array<string | number | null | undefined>,
     parts
       .filter((item) => item !== null && item !== undefined && `${item}`.trim())
       .map((item) => `${item}`.trim())
-      .join(' · '),
+      .join(' '),
     maxLength,
   );
 }

@@ -57,6 +57,9 @@ const membersWithId = memberEntries
     id: e.data.id ?? e.slug,
     nameText: pickI18nText(e.data.name, 'zh'),
     areaText: pickI18nText(e.data.area, 'zh'),
+    honorText: pickI18nText(e.data.honor, 'zh'),
+    honorChips: (pickI18nText(e.data.honor, 'zh') || '').split(/[、,]/).map((s) => s.trim()).filter(Boolean),
+    researchText: pickI18nText(e.data.research, 'zh'),
     statusText: pickI18nText(e.data.status, 'zh'),
     avatarResolved: resolveMemberAvatar({ ...e.data, id: e.slug }),
   }))
@@ -77,9 +80,17 @@ function displayGroupZh(roleZh: string, statusZh: string) {
   if (formerStatuses.includes(statusZh)) return '毕业生';
   return roleZh; // 博士生 / 硕士生 / 研究助理
 }
-const leadMember = membersWithId.find((m) => isLeadRoleZh(m.role.zh));
-const nonLeadMembers = membersWithId.filter((m) => !isLeadRoleZh(m.role.zh));
-const groupOrderZh = ['博士生', '硕士生', '研究助理', '毕业生'];
+// 导师识别加身份兜底：角色文案若调整（或内容缓存异常），仍按 id / honorLines 锁定 PI，
+// 避免 leadMember 落空后导师被排除、又不匹配任何分组而彻底从列表消失。
+function isLeadMember(m: (typeof membersWithId)[number]) {
+  if (m.id === 'prof-cui') return true;
+  if (m.honorLines) return true;
+  return isLeadRoleZh(m.role?.zh ?? '');
+}
+const leadMember = membersWithId.find(isLeadMember);
+const nonLeadMembers = membersWithId.filter((m) => !isLeadMember(m));
+// '导师' 作为兜底分组：万一 leadMember 仍为空，导师也能单独成组显示，不会蒸发。
+const groupOrderZh = ['导师', '博士生', '硕士生', '本科生', '研究助理', '毕业生'];
 const memberGroups = groupOrderZh
   .filter((title) => nonLeadMembers.some((m) => displayGroupZh(m.role.zh, m.statusText) === title))
   .map((title) => ({ title, members: nonLeadMembers.filter((m) => displayGroupZh(m.role.zh, m.statusText) === title) }));
@@ -107,23 +118,28 @@ const pageDesc = '查看课题组成员列表与角色分组。';
         class="member-hero"
         data-member-card
         data-name={leadMember.nameText}
-        data-area={leadMember.areaText}
+        data-area={leadMember.honorText || leadMember.areaText}
         data-role={leadMember.role.zh}
         data-reveal
       >
-        <img
-          class="member-hero-avatar"
-          src={leadMember.avatarResolved}
-          alt={`${leadMember.nameText} 头像`}
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="member-hero-media">
+          <img
+            class="member-hero-avatar"
+            src={leadMember.avatarResolved}
+            alt={`${leadMember.nameText} 头像`}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
         <div class="member-hero-body">
           <h2 class="member-hero-name">{leadMember.nameText}</h2>
           <p class="member-hero-role">{leadMember.role.zh}</p>
-          <p class="member-hero-area">{leadMember.areaText}</p>
+          <div class="member-hero-chips">
+            {leadMember.honorChips.map((c) => <span class="member-hero-chip">{c}</span>)}
+          </div>
+          {leadMember.researchText && <p class="member-hero-bio">{leadMember.researchText}</p>}
           <div class="member-hero-links">
-            <a class="member-hero-link" href={b(`/members/${leadMember.id}/`)}>个人主页</a>
+            <a class="member-hero-link is-primary" href={b(`/members/${leadMember.id}/`)}>个人主页 →</a>
             {leadMember.links?.email && (
               <a class="member-hero-link" href={`mailto:${leadMember.links.email}`}>Email</a>
             )}

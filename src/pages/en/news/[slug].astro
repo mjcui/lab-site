@@ -49,9 +49,9 @@ export async function getStaticPaths() {
   });
 }
 
-const { entry, title, date, cover, categoryEn, readingMinutes, related, prev, next, localeAlternates } = Astro.props;
+const { entry, title, date, categoryEn, readingMinutes, related, prev, next, localeAlternates } = Astro.props;
 const { Content } = await render(entry);
-const pageDesc = `${title}${date ? ` · ${date}` : ''}`;
+const pageDesc = `${title}${date ? ` ${date}` : ''}`;
 ---
 <BaseLayout title={title} desc={pageDesc} lang="en" pathPrefix="/en" ogType="article" localeAlternates={localeAlternates}>
   <section class="detail-shell">
@@ -68,17 +68,7 @@ const pageDesc = `${title}${date ? ` · ${date}` : ''}`;
       </div>
     </header>
 
-    {cover ? (
-      <div class="news-detail-cover" data-reveal>
-        <img src={asset(cover)} alt={title} />
-      </div>
-    ) : (
-      <div class="news-detail-cover" data-reveal>
-        <div class="news-detail-cover__ph">{categoryEn || 'News'}</div>
-      </div>
-    )}
-
-    <article class="card detail-content news-article" data-reveal>
+    <article class="card detail-content news-article news-detail-body" data-reveal>
       <Content />
     </article>
 

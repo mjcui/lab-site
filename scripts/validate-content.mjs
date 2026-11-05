@@ -164,7 +164,7 @@ try {
   assert(newsFiles.length > 0, 'No markdown files in src/content/news');
   assert(paperFiles.length > 0, 'No markdown files in src/content/papers');
   assert(memberFiles.length > 0, 'No markdown files in src/content/members');
-  // 项目页当前为占位设计（"国自然及横向课题 · 内容整理中"），
+  // 项目页当前为占位设计（"国自然及横向课题 内容整理中"），
   // 真实明细补齐前允许 src/content/projects 为空；一旦放入项目文件夹，
   // 其内 overview/background 双语文件仍会被下方循环逐项目校验。
   if (projectFolders.length === 0) {
@@ -219,7 +219,11 @@ try {
     assert(idMatched?.[1] === fileSlug, `member id must match filename: ${path.basename(filePath)}`);
     assertFrontmatter(/name:\s*[\s\S]*zh:\s*['"].+['"][\s\S]*en:\s*['"].+['"]/, frontmatter, `member name zh/en invalid: ${path.basename(filePath)}`);
     assertFrontmatter(/role:\s*[\s\S]*zh:\s*['"].+['"][\s\S]*en:\s*['"].+['"]/, frontmatter, `member role zh/en invalid: ${path.basename(filePath)}`);
-    assertFrontmatter(/area:\s*[\s\S]*zh:\s*['"].+['"][\s\S]*en:\s*['"].+['"]/, frontmatter, `member area zh/en invalid: ${path.basename(filePath)}`);
+    // area 在 content schema 中已改为可选（导师主页改用 research / researchTags 呈现方向），
+    // 仅在字段存在时校验其 zh/en 完整性。
+    if (/^area:/m.test(frontmatter)) {
+      assertFrontmatter(/area:\s*[\s\S]*zh:\s*['"].+['"][\s\S]*en:\s*['"].+['"]/, frontmatter, `member area zh/en invalid: ${path.basename(filePath)}`);
+    }
   });
 
   projectFolders.forEach((folderPath) => {

@@ -6,6 +6,8 @@ import Badge from '../components/Badge.astro';
 import siteZh from '../data/site.zh.json';
 import { getCollection } from 'astro:content';
 import { buildLocalizedNews } from '../utils/news-localized';
+import { resolveMemberAvatar } from '../utils/member-avatar';
+import { pickI18nText } from '../utils/i18n-text';
 
 const t = siteZh;
 
@@ -14,7 +16,17 @@ const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.zh);
 const latest = items.slice(0, 3);
 
 const paperCount = (await getCollection('papers')).length;
-const memberCount = (await getCollection('members')).length;
+const memberEntriesAll = await getCollection('members');
+const memberCount = memberEntriesAll.length;
+const piKeywordsZh = ['负责人', '导师', '教授', 'pi'];
+const piMember = memberEntriesAll
+  .map((e) => ({ ...e.data, id: e.data.id ?? e.slug }))
+  .find((m) => piKeywordsZh.some((k) => (m.role?.zh || '').toLowerCase().includes(k)));
+const piName = piMember ? pickI18nText(piMember.name, 'zh') : '';
+const piRole = piMember ? pickI18nText(piMember.role, 'zh') : '';
+const piHonor = piMember ? pickI18nText(piMember.honor, 'zh') : '';
+const piAvatar = piMember ? resolveMemberAvatar(piMember) : '';
+const piHref = piMember ? b(`/members/${piMember.id}/`) : b('/members/');
 const stats = [
   { value: String(paperCount), label: '发表论文' },
   { value: String(memberCount), label: '课题成员' },
@@ -41,7 +53,7 @@ const researchIcons: Record<string, string> = {
     </div>
     <div class="hero-split__panel">
       <Badge class="hero-badge" variant="blue" />
-      <div class="hero-affil">天津大学 · 电气自动化与信息工程学院</div>
+      <div class="hero-affil">天津大学 电气自动化与信息工程学院</div>
       <h1 class="hero-title">{t.siteName}</h1>
       <p class="hero-subtitle">{t.home.intro}</p>
       <div class="hero-actions">
@@ -53,9 +65,23 @@ const researchIcons: Record<string, string> = {
     </div>
   </section>
 
+  {piMember && (
+    <section class="home-pi" data-reveal>
+      <div class="home-pi-media">
+        <img src={piAvatar} alt={`${piName} 头像`} />
+      </div>
+      <div class="home-pi-body">
+        <div class="home-pi-eyebrow">课题带头人 / Principal Investigator</div>
+        <h2 class="home-pi-name">{piName}<span class="home-pi-role">{piRole}</span></h2>
+        <p class="home-pi-honor">{piHonor}</p>
+        <a class="btn btn-gold home-pi-cta" href={piHref}>进入导师个人主页 →</a>
+      </div>
+    </section>
+  )}
+
   <section class="card home-about mb-5" data-reveal>
     <div class="home-about-media">
-      <img src={asset('/images/smart-grid-lab.webp')} alt="智能电网教育部重点实验室 · 微电网国际合作基地" loading="lazy" decoding="async" />
+      <img src={asset('/images/smart-grid-lab.webp')} alt="智能电网教育部重点实验室 微电网国际合作基地" loading="lazy" decoding="async" />
     </div>
     <div class="home-about-body">
       <div class="page-head"><h2 class="page-title">{t.home.platform.title}</h2></div>

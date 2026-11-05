@@ -19,38 +19,146 @@ export async function getStaticPaths() {
 const { member } = Astro.props;
 const nameText = pickI18nText(member.name, 'zh');
 const areaText = pickI18nText(member.area, 'zh');
+const honorText = pickI18nText(member.honor, 'zh');
+const taglineText = honorText || areaText;
+const honorLines = member.honorLines?.zh ?? [];
+const isPiHero = honorLines.length > 0;
 const bio = pickI18nText(member.bio, 'zh');
+const bioParagraphs = bio.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+const research = pickI18nText(member.research, 'zh');
+const researchTags = member.researchTags?.zh ?? [];
+const editorial = member.editorial?.zh ?? [];
+const awards = member.awards?.zh ?? [];
+const awardRows = awards.map((item) => {
+  const m = item.match(/^(\d{4}(?:[–-]\d{4})?)\s+(.+)$/);
+  return m ? { period: m[1], text: m[2] } : { period: '', text: item };
+});
+const projects = member.projects?.zh ?? [];
+const experience = member.experience?.zh ?? [];
+const education = member.education?.zh ?? [];
 const links = member.links;
 const hasLinks = Boolean(links?.scholar || links?.github || links?.homepage || links?.email);
-const pageDesc = bio || `${member.role.zh}，研究方向：${areaText}。`;
+const hasTimeline = experience.length > 0 || education.length > 0;
+const pageDesc = `${nameText}，${member.role.zh}。${research || honorText || areaText}`;
 ---
 <BaseLayout title={nameText} desc={pageDesc} lang="zh" pathPrefix="">
   <section class="detail-shell">
-    <article class="card detail-hero detail-hero-member" data-reveal>
-      <div class="detail-hero-main">
-        <h1 class="page-title">{nameText}</h1>
-        <div class="detail-meta">
-          <span class="badge">{member.role.zh}</span>
-          <span class="badge-muted">{areaText}</span>
+    {isPiHero ? (
+      <article class="card pi-hero" data-reveal>
+        <div class="pi-hero-avatar-wrap">
+          <img
+            class="pi-hero-avatar"
+            src={member.avatarResolved}
+            alt={`${nameText} 头像`}
+            loading="eager"
+            decoding="async"
+          />
         </div>
-      </div>
-      <img
-        class="member-avatar member-avatar-lg"
-        src={member.avatarResolved}
-        alt={`${nameText} 头像`}
-        loading="eager"
-        decoding="async"
-      />
-    </article>
-
-    {bio && (
-      <article class="card detail-content" data-reveal>
-        <h2>简介</h2>
-        <p>{bio}</p>
+        <div class="pi-hero-body">
+          <h1 class="pi-hero-name">{nameText}</h1>
+          <div class="pi-hero-role">{member.role.zh}</div>
+          <div class="pi-hero-honors">
+            {honorLines.map((line) => <div class="pi-hero-honor-line">{line}</div>)}
+          </div>
+          <div class="pi-hero-actions">
+            {links?.homepage && <a class="btn" href={links.homepage} target="_blank" rel="noreferrer">个人主页</a>}
+            {links?.email && <a class="btn" href={`mailto:${links.email}`}>Email</a>}
+            {links?.scholar && <a class="btn" href={links.scholar} target="_blank" rel="noreferrer">Google Scholar</a>}
+            {links?.github && <a class="btn" href={links.github} target="_blank" rel="noreferrer">GitHub</a>}
+          </div>
+        </div>
+      </article>
+    ) : (
+      <article class="card detail-hero detail-hero-member" data-reveal>
+        <div class="detail-hero-main">
+          <h1 class="page-title">{nameText}</h1>
+          <div class="detail-meta">
+            <span class="badge">{member.role.zh}</span>
+            {taglineText && <span class="badge-muted">{taglineText}</span>}
+          </div>
+        </div>
+        <img
+          class="member-avatar member-avatar-lg"
+          src={member.avatarResolved}
+          alt={`${nameText} 头像`}
+          loading="eager"
+          decoding="async"
+        />
       </article>
     )}
 
-    {hasLinks && (
+    {bioParagraphs.length > 0 && (
+      <article class="card detail-content" data-reveal>
+        <h2>简介</h2>
+        {bioParagraphs.map((p) => <p>{p}</p>)}
+      </article>
+    )}
+
+    {(research || researchTags.length > 0) && (
+      <article class="card detail-section" data-reveal>
+        <h2>主要研究方向</h2>
+        {researchTags.length > 0 && (
+          <ul class="prof-tags">
+            {researchTags.map((tag) => <li class="prof-tag">{tag}</li>)}
+          </ul>
+        )}
+        {research && <p class="prof-research-note">{research}</p>}
+      </article>
+    )}
+
+    {editorial.length > 0 && (
+      <article class="card detail-section" data-reveal>
+        <h2>学术兼职与编委</h2>
+        <ul class="prof-list">
+          {editorial.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    )}
+
+    {awards.length > 0 && (
+      <article class="card detail-section" data-reveal>
+        <h2>主要获奖与荣誉</h2>
+        <div class="prof-awards">
+          {awardRows.map((row) => (
+            <div class="prof-award-row">
+              <span class="prof-award-year">{row.period}</span>
+              <span class="prof-award-text">{row.text}</span>
+            </div>
+          ))}
+        </div>
+      </article>
+    )}
+
+    {hasTimeline && (
+      <article class="card detail-section" data-reveal>
+        <h2>履历</h2>
+        <div class="prof-timeline">
+          {experience.map((item) => (
+            <div class="prof-timeline-item">
+              <div class="prof-period">{item.period}</div>
+              <div class="prof-org">{item.org}{item.note && <span class="prof-note"> {item.note}</span>}</div>
+            </div>
+          ))}
+          {education.map((item, i) => (
+            <div class="prof-timeline-item" class:list={[experience.length > 0 && i === 0 ? 'prof-edu-start' : '']}>
+              <div class="prof-period">{item.period}</div>
+              <div class="prof-org">{item.org}{item.note && <span class="prof-note"> {item.note}</span>}</div>
+            </div>
+          ))}
+        </div>
+      </article>
+    )}
+
+    {projects.length > 0 && (
+      <article class="card detail-section" data-reveal>
+        <h2>主持科研项目</h2>
+        <ul class="prof-list">
+          {projects.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    )}
+
+    {hasLinks && !isPiHero && (
       <article class="card detail-section" data-reveal>
         <h2>链接</h2>
         <div class="detail-links">
@@ -79,3 +187,125 @@ const pageDesc = bio || `${member.role.zh}，研究方向：${areaText}。`;
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .detail-content p {
+    max-width: 100%;
+  }
+  .detail-content p + p {
+    margin-top: 14px;
+  }
+  .detail-section h2,
+  .detail-content h2 {
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+    color: var(--primary);
+  }
+  .prof-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .prof-tag {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+    border-radius: var(--radius-pill);
+    padding: 6px 16px;
+  }
+  .prof-research-note {
+    font-size: var(--text-sm);
+    color: var(--text-soft);
+    margin: 0;
+    line-height: 1.7;
+  }
+  .prof-awards {
+    display: grid;
+    gap: 0;
+  }
+  .prof-award-row {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    font-size: var(--text-sm);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .prof-award-row:first-child { padding-top: 0; }
+  .prof-award-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .prof-award-year {
+    color: var(--primary);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .prof-award-text {
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+  .prof-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 8px 20px;
+    font-size: 13px;
+    color: #444;
+  }
+  .prof-list li {
+    position: relative;
+    padding-left: 14px;
+    line-height: 1.5;
+  }
+  .prof-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+  .prof-timeline {
+    border-left: 2px solid #d7e3f4;
+    margin-left: 6px;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .prof-timeline-item .prof-period {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .prof-timeline-item .prof-org {
+    font-size: 13px;
+    color: #444;
+    margin-top: 2px;
+  }
+  .prof-note {
+    color: #777;
+  }
+  .prof-edu-start {
+    border-top: 1px dashed #d7e3f4;
+    padding-top: 14px;
+    margin-top: -14px;
+  }
+  @media (max-width: 560px) {
+    .prof-award-row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

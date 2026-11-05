@@ -98,7 +98,7 @@ const navPathCompare = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title ? `${title} · ${t.siteName}` : t.siteName}</title>
+    <title>{title ? `${title} ${t.siteName}` : t.siteName}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     {!disableCanonical && <link rel="canonical" href={canonicalUrl} />}
@@ -107,15 +107,15 @@ const navPathCompare = {
     {!disableLocaleAlternates && xDefaultPath && <link rel="alternate" hreflang="x-default" href={toAbsoluteUrl(xDefaultPath, siteUrl)} />}
     <meta property="og:site_name" content={t.siteName} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:title" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta property="og:title" content={title ? `${title} ${t.siteName}` : t.siteName} />
     <meta property="og:description" content={description} />
     {!disableCanonical && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:alt" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta property="og:image:alt" content={title ? `${title} ${t.siteName}` : t.siteName} />
     <meta property="og:locale" content={ogLocale} />
     {!disableLocaleAlternates && hasAlternateLocale && <meta property="og:locale:alternate" content={alternateOgLocale} />}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta name="twitter:title" content={title ? `${title} ${t.siteName}` : t.siteName} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <ClientRouter />
@@ -146,7 +146,7 @@ const navPathCompare = {
       <div class="container nav">
         <a class="brand" href={navPathResolved.home} aria-label={t.siteName}>
           <Badge class="brand-badge" variant="blue" />
-          <span class="brand-text">{lang === 'zh' ? '天津大学 · ' : 'Tianjin University · '}{t.brand}</span>
+          <span class="brand-text">{lang === 'zh' ? '天津大学 ' : 'Tianjin University '}{t.brand}</span>
         </a>
         <nav class="nav-links">
           <a class={`nav-link ${currentPath === navPathCompare.home ? 'is-active' : ''}`} href={navPathResolved.home}>{t.nav.home}</a>
@@ -169,7 +169,7 @@ const navPathCompare = {
       <div class="container footer-inner">
         <div class="footer-brand">
           <Badge class="footer-badge" variant="blue" />
-          <span>天津大学 · {t.siteName}</span>
+          <span>天津大学 {t.siteName}</span>
         </div>
         <span class="lang-switch">
           {lang === 'zh' ? (
