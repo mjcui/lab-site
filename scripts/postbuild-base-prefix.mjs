@@ -20,7 +20,15 @@ import path from 'node:path';
 import { resolveConfiguredBasePath } from './site-url.mjs';
 
 const distDir = path.resolve('dist');
-const base = resolveConfiguredBasePath(process.env.MODE || 'production').replace(/\/+$/, '');
+
+// base 的判定必须与 astro.config.mjs 保持一致，否则会出现「Astro 按根路径构建、
+// postbuild 却按 /lab-site 补前缀」的不匹配，导致本地预览裂图。
+// astro.config.mjs 用 NODE_ENV 判断，这里同样以 NODE_ENV 为准，
+// MODE 仅作为 Astro CLI 显式指定模式时的补充。
+const isDev =
+  process.env.NODE_ENV === 'development' ||
+  (process.env.NODE_ENV !== 'production' && process.env.MODE === 'development');
+const base = resolveConfiguredBasePath(isDev ? 'development' : 'production').replace(/\/+$/, '');
 
 if (!base) {
   console.log('[postbuild] base为空（部署在域名根目录），无需处理');

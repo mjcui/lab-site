@@ -18,9 +18,14 @@ function assertIncludes(html, needle, file) {
   }
 }
 
-const siteUrl = resolveConfiguredSiteUrl(process.env.MODE || 'production');
+// 判定模式需与 astro.config.mjs 一致：dev 挂根路径，生产挂 /lab-site 子路径。
+// 否则本地跑校验时会用生产 base 去断言根路径构建的产物，导致误报。
+const isDev =
+  process.env.NODE_ENV === 'development' ||
+  (process.env.NODE_ENV !== 'production' && process.env.MODE === 'development');
+const siteUrl = resolveConfiguredSiteUrl(isDev ? 'development' : 'production');
 // 站内绝对路径在部署到子路径时必须带 base 前缀，断言需与之保持一致
-const base = new URL(siteUrl).pathname.replace(/\/+$/, '');
+const base = isDev ? '' : new URL(siteUrl).pathname.replace(/\/+$/, '');
 const withBase = (p) => `${base}${p}`;
 
 // 项目页仅列已公开项目名称，尚无独立项目详情页，dist/projects/project-1 这类页面可能不存在；
