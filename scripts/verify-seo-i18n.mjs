@@ -53,6 +53,7 @@ const checks = [
       `href="${withBase('/projects/')}"`,
       `href="${withBase('/papers/')}"`,
       `href="${withBase('/news/')}"`,
+      `href="${withBase('/activities/')}"`,
       `href="${withBase('/join/')}"`,
     ],
   },
@@ -68,6 +69,7 @@ const checks = [
       `href="${withBase('/en/projects/')}"`,
       `href="${withBase('/en/papers/')}"`,
       `href="${withBase('/en/news/')}"`,
+      `href="${withBase('/en/activities/')}"`,
       `href="${withBase('/en/join/')}"`,
     ],
   },
@@ -83,6 +85,14 @@ const checks = [
         },
       ]
     : []),
+  {
+    file: 'dist/activities/index.html',
+    includes: [
+      `<link rel="canonical" href="${siteUrl}activities/">`,
+      `<link rel="alternate" hreflang="en" href="${siteUrl}en/activities/">`,
+      `href="${withBase('/en/activities/')}"`,
+    ],
+  },
   {
     file: 'dist/life/index.html',
     includes: [
