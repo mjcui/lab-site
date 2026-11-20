@@ -1,0 +1,81 @@
+---
+import { b, asset } from '../utils/seo';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { buildLocalizedActivities } from '../utils/activities-localized';
+
+const activityEntries = await getCollection('activities');
+const items = buildLocalizedActivities(activityEntries);
+const categories = [
+  ...new Set(items.map((i) => i.category?.zh).filter(Boolean)),
+] as string[];
+const pageDesc = '记录课题组的日常活动：聚餐、团建、文体活动等。';
+---
+<BaseLayout title="活动" desc={pageDesc} lang="zh" pathPrefix="">
+  <section class="page-head" data-reveal>
+    <h1 class="page-title">课题组活动</h1>
+    <p class="page-sub">记录课题组的日常活动与集体瞬间。</p>
+  </section>
+
+  <section data-list-filter-root data-reveal>
+    <div class="news-filter-bar">
+      <div class="news-chips">
+        <button class="news-chip is-selected" type="button" data-category-chip="__all">全部</button>
+        {categories.map((c) => (
+          <button class="news-chip" type="button" data-category-chip={c}>{c}</button>
+        ))}
+      </div>
+      <input
+        class="filter-input"
+        type="search"
+        data-list-search
+        placeholder="搜索活动标题 / 日期 / 关键词..."
+        aria-label="搜索活动"
+      />
+    </div>
+    <p class="empty-state" data-empty-state hidden>没有匹配的活动，请调整关键词或分类。</p>
+
+    {items.length === 0 && (
+      <div class="card detail-hero" data-reveal>
+        <span class="badge-muted">内容整理中</span>
+        <h2 class="mt-4">活动记录正在整理</h2>
+        <p class="mt-4">课题组日常活动记录即将上线，敬请期待。</p>
+        <div class="back-row" data-reveal>
+          <a class="btn btn-primary" href={b('/')}>返回首页</a>
+          <a class="btn btn-ghost" href={b('/news/')}>查看新闻</a>
+        </div>
+      </div>
+    )}
+
+    <div class="news-grid">
+      {items.map((a, i) => (
+        <a
+          class="news-card card-hover"
+          href={b(`/activities/${a.slug}/`)}
+          data-list-card
+          data-category={a.category?.zh || ''}
+          data-search-text={`${a.title.zh} ${a.date || ''} ${a.category?.zh || ''} ${a.slug}`}
+          data-reveal
+          data-reveal-order={String(i)}
+        >
+          <div class="news-card__media">
+            {a.cover ? (
+              <img src={asset(a.cover)} alt={a.title.zh} loading="lazy" decoding="async" />
+            ) : (
+              <div class="news-card__ph">{a.category?.zh || '活动'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {a.category?.zh && <span class="news-tag">{a.category.zh}</span>}
+              {a.date && <span class="news-card__date">{a.date}</span>}
+            </div>
+            <h3 class="news-card__title">{a.title.zh || a.slug}</h3>
+            {a.summary?.zh && <p class="news-card__summary">{a.summary.zh}</p>}
+            <span class="news-card__more">查看详情 →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
