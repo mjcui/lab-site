@@ -101,6 +101,23 @@ const members = defineCollection({
   })
 });
 
+/**
+ * 活动记录：课题组的日常活动（聚餐、团建、文体等）。
+ * 与 news 不同，这里采用「单文件双语」结构——一个活动一个 md 文件，
+ * 中英文写在同一份 frontmatter 里，便于成对维护与查找。
+ */
+const activities = defineCollection({
+  type: 'content',
+  schema: z.object({
+    date: newsDate,
+    title: i18nText,
+    category: i18nText.optional(),
+    participants: bilingualList.optional(),
+    cover: z.string().min(1).optional(),
+    summary: i18nText.optional(),
+  })
+});
+
 const join = defineCollection({
   type: 'content',
   schema: z.object({
@@ -115,4 +132,4 @@ const life = defineCollection({
   })
 });
 
-export const collections = { news, papers, members, join, life };
+export const collections = { news, papers, members, activities, join, life };
