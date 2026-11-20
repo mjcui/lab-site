@@ -18,7 +18,7 @@ area:
 experience:
   zh:
     - period: "2026.07 – 至今"
-      org: "国网常州"
+      org: "国网常州供电公司"
       note: "待填：岗位 / 职位"
   en:
     - period: "2026.07 – Present"
