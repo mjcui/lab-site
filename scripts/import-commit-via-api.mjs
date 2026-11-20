@@ -20,13 +20,35 @@ if (!repo) {
 
 const API = `https://api.github.com/repos/${repo}`;
 
+/**
+ * 取 GitHub 凭据（走 git credential helper，token 存在本机凭据管理器里）。
+ * 未认证的 API 请求只有 60 次/小时，导入整个仓库树远远不够，必须认证。
+ */
+function resolveToken() {
+  try {
+    const out = execSync('git credential fill', {
+      input: 'protocol=https\nhost=github.com\n\n',
+      encoding: 'utf8',
+    });
+    const m = out.match(/^password=(.+)$/m);
+    return m ? m[1].trim() : '';
+  } catch {
+    return '';
+  }
+}
+
+const TOKEN = process.env.GITHUB_TOKEN || resolveToken();
+
 function api(path) {
-  const out = execFileSync(
-    'curl',
-    ['-s', '--max-time', '30', '-H', 'Accept: application/vnd.github+json', `${API}${path}`],
-    { maxBuffer: 64 * 1024 * 1024 }
-  );
-  return JSON.parse(out.toString());
+  const args = ['-s', '--max-time', '30', '-H', 'Accept: application/vnd.github+json'];
+  if (TOKEN) args.push('-H', `Authorization: Bearer ${TOKEN}`);
+  args.push(`${API}${path}`);
+  const out = execFileSync('curl', args, { maxBuffer: 64 * 1024 * 1024 });
+  const json = JSON.parse(out.toString());
+  if (json && json.message && !json.object && !json.tree && !json.sha) {
+    throw new Error(`GitHub API 返回错误: ${json.message}`);
+  }
+  return json;
 }
 
 function git(args, input) {
