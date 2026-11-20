@@ -117,6 +117,14 @@ const checks = [
     includes: ['论文', '搜索标题'],
   },
   {
+    file: 'dist/activities/index.html',
+    includes: ['课题组活动', '搜索活动'],
+  },
+  {
+    file: 'dist/en/activities/index.html',
+    includes: ['Lab Activities', 'Search activities'],
+  },
+  {
     file: 'dist/news/index.html',
     includes: ['新闻动态', '搜索新闻标题'],
   },
@@ -148,6 +156,8 @@ const checks = [
           '  - name: news',
           '  - name: members',
           '    folder: src/content/members',
+          '  - name: activities',
+          '    folder: src/content/activities',
           '  - name: papers',
           '    folder: src/content/papers',
           '  - name: join',
