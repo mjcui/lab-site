@@ -1,0 +1,178 @@
+---
+import { b, asset } from '../../../utils/seo';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { buildLocalizedActivities, formatParticipants } from '../../../utils/activities-localized';
+
+export async function getStaticPaths() {
+  const allActivities = await getCollection('activities');
+  const localized = buildLocalizedActivities(allActivities);
+
+  return localized.map((item, idx) => {
+    const related = localized
+      .filter((a) => a.slug !== item.slug)
+      .slice(0, 3)
+      .map((a) => ({
+        slug: a.slug,
+        date: a.date,
+        title: a.title.en || a.title.zh || a.slug,
+        cover: a.cover,
+        categoryEn: a.category?.en,
+      }));
+    const prev = localized[idx + 1];
+    const next = localized[idx - 1];
+    const bodyLen = ((item.entry as unknown as { body?: string })?.body?.length) || 0;
+    const readingMinutes = Math.max(1, Math.round(bodyLen / 350));
+    return {
+      params: { slug: item.slug },
+      props: {
+        entry: item.entry,
+        title: item.title.en || item.title.zh || item.slug,
+        date: item.date,
+        cover: item.cover,
+        categoryEn: item.category?.en,
+        participantsEn: formatParticipants(item.participants, 'en'),
+        readingMinutes,
+        localeAlternates: {
+          zh: `/activities/${item.slug}/`,
+          en: `/en/activities/${item.slug}/`,
+          xDefault: `/activities/${item.slug}/`,
+        },
+        related,
+        prev: prev
+          ? { slug: prev.slug, title: prev.title.en || prev.title.zh || prev.slug }
+          : undefined,
+        next: next
+          ? { slug: next.slug, title: next.title.en || next.title.zh || next.slug }
+          : undefined,
+      },
+    };
+  });
+}
+
+const {
+  entry,
+  title,
+  date,
+  cover,
+  categoryEn,
+  participantsEn,
+  readingMinutes,
+  related,
+  prev,
+  next,
+  localeAlternates,
+} = Astro.props;
+const { Content } = await render(entry);
+const pageDesc = `${title}${date ? ` ${date}` : ''}`;
+---
+<BaseLayout title={title} desc={pageDesc} lang="en" pathPrefix="/en" ogType="article" localeAlternates={localeAlternates}>
+  <section class="detail-shell">
+    <nav class="news-crumbs" data-reveal>
+      <a href={b('/')}>Home</a> / <a href={b('/en/activities/')}>Lab Activities</a>
+    </nav>
+
+    <header class="detail-hero" data-reveal>
+      {cover && (
+        <div class="detail-hero-media">
+          <img src={asset(cover)} alt={title} loading="lazy" decoding="async" />
+        </div>
+      )}
+      <h1 class="page-title">{title}</h1>
+      <div class="news-detail-meta">
+        {categoryEn && <span class="news-tag">{categoryEn}</span>}
+        {date && <span class="badge-muted">{date}</span>}
+        <span class="news-card__date">About {readingMinutes} min read</span>
+      </div>
+      {participantsEn && (
+        <p class="activity-participants">
+          <span class="activity-participants-label">Participants</span>
+          <span class="activity-participants-value">{participantsEn}</span>
+        </p>
+      )}
+    </header>
+
+    <article class="card detail-content news-article news-detail-body" data-reveal>
+      <Content />
+    </article>
+
+    {related.length > 0 && (
+      <section class="detail-section" data-reveal>
+        <h2>More Activities</h2>
+        <div class="news-related">
+          {related.map((a) => (
+            <a class="news-card card-hover" href={b(`/en/activities/${a.slug}/`)}>
+              <div class="news-card__media">
+                {a.cover ? (
+                  <img src={asset(a.cover)} alt={a.title} loading="lazy" decoding="async" />
+                ) : (
+                  <div class="news-card__ph">{a.categoryEn || 'Activity'}</div>
+                )}
+              </div>
+              <div class="news-card__body">
+                <div class="news-card__meta">
+                  {a.categoryEn && <span class="news-tag">{a.categoryEn}</span>}
+                  <span class="news-card__date">{a.date}</span>
+                </div>
+                <h3 class="news-card__title">{a.title}</h3>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <nav class="news-nav" data-reveal>
+      {prev ? (
+        <a href={b(`/en/activities/${prev.slug}/`)}>
+          <span class="news-nav__dir">← Previous</span>
+          <span class="news-nav__title">{prev.title}</span>
+        </a>
+      ) : <span></span>}
+      {next ? (
+        <a href={b(`/en/activities/${next.slug}/`)} style="text-align:right">
+          <span class="news-nav__dir">Next →</span>
+          <span class="news-nav__title">{next.title}</span>
+        </a>
+      ) : <span></span>}
+    </nav>
+
+    <div class="back-row" data-reveal>
+      <a class="btn btn-primary" href={b('/en/activities/')} data-history-back>Back to Activities</a>
+      <a class="btn btn-ghost" href={b('/')}>Back to Home</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .activity-participants {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .activity-participants-label {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .activity-participants-value {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .detail-hero-media {
+    margin-bottom: 18px;
+    border-radius: var(--radius-lg, 14px);
+    overflow: hidden;
+  }
+
+  .detail-hero-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
