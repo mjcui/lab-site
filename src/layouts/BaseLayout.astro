@@ -70,6 +70,7 @@ const navPath = {
   projects: `${pathPrefix}/projects`,
   papers: `${pathPrefix}/papers`,
   news: `${pathPrefix}/news`,
+  activities: `${pathPrefix}/activities`,
   join: `${pathPrefix}/join`,
   life: `${pathPrefix}/life`,
 };
@@ -79,6 +80,7 @@ const navPathResolved = {
   projects: withBasePath(navPath.projects, base),
   papers: withBasePath(navPath.papers, base),
   news: withBasePath(navPath.news, base),
+  activities: withBasePath(navPath.activities, base),
   join: withBasePath(navPath.join, base),
   life: withBasePath(navPath.life, base),
 };
@@ -89,6 +91,7 @@ const navPathCompare = {
   projects: normalizeSitePath(navPath.projects),
   papers: normalizeSitePath(navPath.papers),
   news: normalizeSitePath(navPath.news),
+  activities: normalizeSitePath(navPath.activities),
   join: normalizeSitePath(navPath.join),
   life: normalizeSitePath(navPath.life),
 };
@@ -154,6 +157,7 @@ const navPathCompare = {
           <a class={`nav-link ${currentPath.startsWith(navPathCompare.projects) ? 'is-active' : ''}`} href={navPathResolved.projects}>{t.nav.projects}</a>
           <a class={`nav-link ${currentPath.startsWith(navPathCompare.papers) ? 'is-active' : ''}`} href={navPathResolved.papers}>{t.nav.papers}</a>
           <a class={`nav-link ${currentPath.startsWith(navPathCompare.news) ? 'is-active' : ''}`} href={navPathResolved.news}>{t.nav.news}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.activities) ? 'is-active' : ''}`} href={navPathResolved.activities}>{t.nav.activities}</a>
           <a class={`nav-link nav-link-cta ${currentPath.startsWith(navPathCompare.join) ? 'is-active' : ''}`} href={navPathResolved.join}>{t.nav.join}</a>
         </nav>
         <div class="nav-actions">
