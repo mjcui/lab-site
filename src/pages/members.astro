@@ -103,6 +103,11 @@ const membersWithId = memberEntries
     const yearA = a.gradeYear ?? Number.MAX_SAFE_INTEGER;
     const yearB = b.gradeYear ?? Number.MAX_SAFE_INTEGER;
     if (yearA !== yearB) return yearA - yearB;
+    // 同组同年级时，若成员填了 order 则按其升序（数字小的在前），
+    // 未填 order 的排在已填的之后，最后才按姓名排。
+    const orderA = a.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.order ?? Number.MAX_SAFE_INTEGER;
+    if (orderA !== orderB) return orderA - orderB;
     return a.nameText.localeCompare(b.nameText);
   });
 
