@@ -121,7 +121,7 @@ function parseNewsFileInfo(relPath) {
 function validateSite(site, lang) {
   assert(isString(site.brand), `site.${lang}.brand invalid`);
   assert(isString(site.siteName), `site.${lang}.siteName invalid`);
-  ['home', 'members', 'projects', 'papers', 'news'].forEach((key) => {
+  ['home', 'members', 'projects', 'papers', 'news', 'activities'].forEach((key) => {
     assert(isString(site.nav?.[key]), `site.${lang}.nav.${key} invalid`);
   });
   assert(isString(site.home?.intro), `site.${lang}.home.intro invalid`);
@@ -141,12 +141,14 @@ try {
   }
 
   const newsDir = path.join(contentBase, 'news');
+  const activitiesDir = path.join(contentBase, 'activities');
   const papersDir = path.join(contentBase, 'papers');
   const membersDir = path.join(contentBase, 'members');
   const projectsDir = path.join(contentBase, 'projects');
   const joinDir = path.join(contentBase, 'join');
   const lifeDir = path.join(contentBase, 'life');
   assert(fs.existsSync(newsDir), 'Missing src/content/news');
+  assert(fs.existsSync(activitiesDir), 'Missing src/content/activities');
   assert(fs.existsSync(papersDir), 'Missing src/content/papers');
   assert(fs.existsSync(membersDir), 'Missing src/content/members');
   // 项目页直接读取 members 中导师的 projects 字段（与导师主页「主持科研项目」同源），
@@ -156,12 +158,14 @@ try {
   assert(fs.existsSync(lifeDir), 'Missing src/content/life');
 
   const newsFiles = collectMarkdownFilesRecursive(newsDir);
+  const activityFiles = collectMarkdownFilesRecursive(activitiesDir);
   const paperFiles = fs.readdirSync(papersDir).filter((name) => name.endsWith('.md')).map((name) => path.join(papersDir, name));
   const memberFiles = fs.readdirSync(membersDir).filter((name) => name.endsWith('.md')).map((name) => path.join(membersDir, name));
   const projectFolders = fs.existsSync(projectsDir) ? collectDirectories(projectsDir) : [];
   const joinFolders = collectDirectories(joinDir);
 
   assert(newsFiles.length > 0, 'No markdown files in src/content/news');
+  assert(activityFiles.length > 0, 'No markdown files in src/content/activities');
   assert(paperFiles.length > 0, 'No markdown files in src/content/papers');
   assert(memberFiles.length > 0, 'No markdown files in src/content/members');
   // 项目页当前仅列已公开项目名称，明细补齐前允许 src/content/projects 为空；
@@ -201,6 +205,19 @@ try {
 
   newsLangMap.forEach((langs, slug) => {
     assert(langs.has('zh') && langs.has('en'), `news zh/en pair missing for slug: ${slug}`);
+  });
+
+  // 活动：单文件双语结构，中英文同处一份 frontmatter。
+  activityFiles.forEach((filePath) => {
+    const rel = path.relative(activitiesDir, filePath).replaceAll('\\', '/');
+    assert(/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(rel), `activity filename invalid: ${rel}`);
+    const { frontmatter, body } = parseMarkdown(filePath);
+    assertFrontmatter(/date:\s*['"]?\d{4}-\d{2}-\d{2}['"]?/, frontmatter, `activity frontmatter date invalid: ${rel}`);
+    assertLocalizedFrontmatterObject(frontmatter, 'title', `activity frontmatter title zh\/en invalid: ${rel}`);
+    assert(isString(body), `activity body empty: ${rel}`);
+    forbiddenCmsResidue.forEach((needle) => {
+      assert(!body.includes(needle), `activity body contains CMS test residue "${needle}": ${rel}`);
+    });
   });
 
   paperFiles.forEach((filePath) => {
