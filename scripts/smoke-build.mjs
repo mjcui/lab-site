@@ -153,7 +153,14 @@ const checks = [
           '  - name: join',
           '    delete: false',
           '    file: src/content/join/recruitment/overview_cn.md',
-          '  - name: projects',
+          // members collection 需暴露 grade / order：
+          // grade 决定列表页的入学年级排序，order 决定同年级内的自定义次序。
+          '    name: grade',
+          '    name: order',
+          '    widget: number',
+          // 项目数据已改由成员档案的 projects 字段承载，
+          // 不再有独立的 projects collection，故此处不检查它。
+          ...(listProjectSlugs().length > 0 ? ['  - name: projects'] : []),
           ...projectCmsConfigNeedles,
         ],
       }
