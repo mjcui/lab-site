@@ -8,6 +8,18 @@ import { pickI18nText } from '../../utils/i18n-text';
 const memberEntries = await getCollection('members');
 const roleOrder = ['Professor, Doctoral Supervisor', 'PhD', 'Master', 'RA'];
 const roleRank = new Map(roleOrder.map((role, index) => [role, index]));
+/**
+ * 就业去向是否可展示。
+ * 单位名仍是占位符（如「待填：就业单位名称」/「To be filled: employer name」）时
+ * 不渲染——公开主页上露出占位文本不体面。
+ */
+function resolveDestinationText(org: string | undefined): string {
+  const value = (org || '').trim();
+  if (!value) return '';
+  if (/待填|to be filled|TBD|tbd/i.test(value)) return '';
+  return value;
+}
+
 const currentStatuses = ['Current', 'Active'];
 const formerStatuses = ['Alumni', 'Former'];
 const leadRoleKeywordsEn = ['pi', 'advisor', 'professor', 'supervisor', 'faculty', 'director', 'lead'];
@@ -62,6 +74,8 @@ const membersWithId = memberEntries
     researchText: pickI18nText(e.data.research, 'en'),
     statusText: pickI18nText(e.data.status, 'en'),
     gradeText: pickI18nText(e.data.grade, 'en'),
+    // 毕业生在列表卡片上直接显示就业去向（取履历首条的单位名）
+    destinationText: resolveDestinationText((e.data.experience?.en ?? [])[0]?.org),
     avatarResolved: resolveMemberAvatar(e.data),
   }))
   .sort((a, b) => {
@@ -183,6 +197,12 @@ const pageDesc = 'Browse our lab members and role groups.';
                 />
                 <h3>{m.nameText}</h3>
                 <p class="member-role"><span class="badge-muted">{m.gradeText ? `${m.gradeText}, ${m.role.en}` : m.role.en}</span></p>
+                {m.destinationText && (
+                  <p class="member-destination">
+                    <span class="member-destination-label">Destination</span>
+                    <span class="member-destination-value">{m.destinationText}</span>
+                  </p>
+                )}
               </a>
             ))}
           </div>

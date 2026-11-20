@@ -1168,6 +1168,29 @@ html {
   margin-top: 8px;
 }
 
+/* 毕业生卡片上的就业去向（列表页直接可见，无需点进详情） */
+.member-destination {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.member-destination-label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.member-destination-value {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  word-break: break-word;
+}
+
 .member-status {
   position: absolute;
   top: 12px;
