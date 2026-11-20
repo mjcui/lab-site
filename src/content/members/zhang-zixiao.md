@@ -22,6 +22,6 @@ experience:
       note: "待填：岗位 / 职位"
   en:
     - period: "2026.07 – Present"
-      org: "To be filled: employer name"
+      org: "State Grid Changzhou Power Supply Company"
       note: "To be filled: position"
 ---
