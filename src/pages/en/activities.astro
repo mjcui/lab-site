@@ -1,0 +1,81 @@
+---
+import { b, asset } from '../../utils/seo';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { buildLocalizedActivities } from '../../utils/activities-localized';
+
+const activityEntries = await getCollection('activities');
+const items = buildLocalizedActivities(activityEntries);
+const categories = [
+  ...new Set(items.map((i) => i.category?.en).filter(Boolean)),
+] as string[];
+const pageDesc = 'Lab activities: meals, team building, sports and other gatherings.';
+---
+<BaseLayout title="Activities" desc={pageDesc} lang="en" pathPrefix="/en">
+  <section class="page-head" data-reveal>
+    <h1 class="page-title">Lab Activities</h1>
+    <p class="page-sub">Moments from our lab gatherings — meals, team building, and more.</p>
+  </section>
+
+  <section data-list-filter-root data-reveal>
+    <div class="news-filter-bar">
+      <div class="news-chips">
+        <button class="news-chip is-selected" type="button" data-category-chip="__all">All</button>
+        {categories.map((c) => (
+          <button class="news-chip" type="button" data-category-chip={c}>{c}</button>
+        ))}
+      </div>
+      <input
+        class="filter-input"
+        type="search"
+        data-list-search
+        placeholder="Search activities by title / date..."
+        aria-label="Search activities"
+      />
+    </div>
+    <p class="empty-state" data-empty-state hidden>No matching activities. Try adjusting your keywords.</p>
+
+    {items.length === 0 && (
+      <div class="card detail-hero" data-reveal>
+        <span class="badge-muted">Coming soon</span>
+        <h2 class="mt-4">Activity records are being prepared</h2>
+        <p class="mt-4">Lab activity notes will be published here soon.</p>
+        <div class="back-row" data-reveal>
+          <a class="btn btn-primary" href={b('/')}>Back to Home</a>
+          <a class="btn btn-ghost" href={b('/news/')}>View News</a>
+        </div>
+      </div>
+    )}
+
+    <div class="news-grid">
+      {items.map((a, i) => (
+        <a
+          class="news-card card-hover"
+          href={b(`/en/activities/${a.slug}/`)}
+          data-list-card
+          data-category={a.category?.en || ''}
+          data-search-text={`${a.title.en} ${a.date || ''} ${a.category?.en || ''} ${a.slug}`}
+          data-reveal
+          data-reveal-order={String(i)}
+        >
+          <div class="news-card__media">
+            {a.cover ? (
+              <img src={asset(a.cover)} alt={a.title.en} loading="lazy" decoding="async" />
+            ) : (
+              <div class="news-card__ph">{a.category?.en || 'Activity'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {a.category?.en && <span class="news-tag">{a.category.en}</span>}
+              {a.date && <span class="news-card__date">{a.date}</span>}
+            </div>
+            <h3 class="news-card__title">{a.title.en || a.title.zh || a.slug}</h3>
+            {a.summary?.en && <p class="news-card__summary">{a.summary.en}</p>}
+            <span class="news-card__more">Read more →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
