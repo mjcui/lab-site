@@ -75,6 +75,9 @@ const members = defineCollection({
     }),
     status: z.union([z.string().min(1), i18nText]).optional(),
     grade: i18nText.optional(),
+    // 组内自定义顺序：在「分组 → 职位 → 入学年级」都相同的成员间，
+    // 按 order 升序排列（数字小的在前）。不填则按姓名排序。
+    order: z.number().optional(),
     area: z.union([z.string().min(1), i18nText]).optional(),
     honor: i18nText.optional(),
     honorLines: bilingualList.optional(),
