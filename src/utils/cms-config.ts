@@ -205,6 +205,8 @@ function cmsCollections() {
     ...localizedTextField('Name', 'name'),
     ...localizedTextField('Role', 'role'),
     ...localizedTextField('Status', 'status', { required: false }),
+    ...localizedTextField('Grade', 'grade', { required: false }),
+    ...stringField('Order', 'order', { required: false, widget: 'number' }),
     ...localizedTextField('Research Area', 'area'),
     ...stringField('Avatar Path', 'avatar', { required: false }),
     ...localizedTextField('Bio', 'bio', { required: false }),
