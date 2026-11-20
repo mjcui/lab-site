@@ -20,6 +20,16 @@ function resolveDestinationText(org: string | undefined): string {
   return value;
 }
 
+/**
+ * 从年级文本中提取入学年份，用于按入学时间排序。
+ * 中文形如「2023级」，英文形如「Class of 2023」。
+ * 取不到年份时返回 null（视为无年级信息，排在本组末尾）。
+ */
+function resolveGradeYear(gradeText: string | undefined): number | null {
+  const matched = (gradeText || '').match(/(19|20)\d{2}/);
+  return matched ? Number(matched[0]) : null;
+}
+
 const currentStatuses = ['在读', '在职'];
 const formerStatuses = ['已毕业', '已离开'];
 const leadRoleKeywordsZh = ['负责人', '导师', '教授', 'pi'];
@@ -74,6 +84,7 @@ const membersWithId = memberEntries
     researchText: pickI18nText(e.data.research, 'zh'),
     statusText: pickI18nText(e.data.status, 'zh'),
     gradeText: pickI18nText(e.data.grade, 'zh'),
+    gradeYear: resolveGradeYear(pickI18nText(e.data.grade, 'zh')),
     // 毕业生在列表卡片上直接显示就业去向（取履历首条的单位名）
     destinationText: resolveDestinationText((e.data.experience?.zh ?? [])[0]?.org),
     avatarResolved: resolveMemberAvatar({ ...e.data, id: e.slug }),
@@ -86,7 +97,13 @@ const membersWithId = memberEntries
     }
     const rankA = getRoleRankZh(a.role.zh);
     const rankB = getRoleRankZh(b.role.zh);
-    return rankA - rankB || a.nameText.localeCompare(b.nameText);
+    if (rankA !== rankB) return rankA - rankB;
+    // 同组同职位时，按入学年级升序：入学早的排前面。
+    // 无年级信息（gradeYear 为 null）的排在有年级的之后。
+    const yearA = a.gradeYear ?? Number.MAX_SAFE_INTEGER;
+    const yearB = b.gradeYear ?? Number.MAX_SAFE_INTEGER;
+    if (yearA !== yearB) return yearA - yearB;
+    return a.nameText.localeCompare(b.nameText);
   });
 
 // 显示分组：导师 → 博士生 → 硕士生 → 已毕业（已毕业不按角色拆分，单独成栏置于末尾）
