@@ -966,6 +966,25 @@
   font-size: var(--text-sm);
 }
 
+/* DOI 行：详情页展示，可点击跳转至出版方页面 */
+.paper-doi {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+.paper-doi a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.paper-doi a:hover {
+  border-bottom-color: currentColor;
+}
+
 .detail-content {
   display: grid;
   gap: 14px;
