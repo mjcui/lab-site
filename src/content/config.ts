@@ -56,6 +56,9 @@ const papers = defineCollection({
     pages: z.string().min(1).optional(),
     // DOI（不带 https://doi.org/ 前缀）
     doi: z.string().min(1).optional(),
+    // 出版状态：published 已出版 / accepted 已录用待出版（网络首发）
+    // 缺省视为已出版
+    pubStatus: z.enum(['published', 'accepted']).optional(),
     authors: z.string().optional(),
     abstract: z.string().optional(),
     links: z
