@@ -46,6 +46,7 @@ const pageDesc = '查看课题组论文列表与发表信息。';
                 const tail = p.pages ? `: ${p.pages}` : '';
                 return `${head}${tail}`;
               })();
+              const isAccepted = p.pubStatus === 'accepted';
               return (
                 <a
                   href={b(`/papers/${p.slug}/`)}
@@ -59,7 +60,7 @@ const pageDesc = '查看课题组论文列表与发表信息。';
                   </div>
                   <h3 class="paper-title">{p.title}</h3>
                   <p class="paper-meta">
-                    {p.venue}{issueMeta ? `, ${issueMeta}` : ''}{p.authors ? ` ${p.authors}` : ''}
+                    {p.venue}{issueMeta ? `, ${issueMeta}` : ''}{isAccepted ? ', 已录用待出版' : ''}{p.authors ? ` ${p.authors}` : ''}
                   </p>
                 </a>
               );
