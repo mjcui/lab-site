@@ -40,6 +40,12 @@ const pageDesc = '查看课题组论文列表与发表信息。';
             {papersByYear[year].map((p) => {
               const m = venueMeta(p.venue, 'zh');
               const hasLink = Boolean(p.links?.online || p.links?.pdf);
+              const issueMeta = (() => {
+                if (!p.volume && !p.issue && !p.pages) return '';
+                const head = [p.volume, p.issue].filter(Boolean).join('(') + (p.volume && p.issue ? ')' : '');
+                const tail = p.pages ? `: ${p.pages}` : '';
+                return `${head}${tail}`;
+              })();
               return (
                 <a
                   href={b(`/papers/${p.slug}/`)}
@@ -52,7 +58,9 @@ const pageDesc = '查看课题组论文列表与发表信息。';
                     {hasLink && <span class="paper-link-ico" aria-hidden="true">↗</span>}
                   </div>
                   <h3 class="paper-title">{p.title}</h3>
-                  <p class="paper-meta">{p.venue}{p.authors ? ` ${p.authors}` : ''}</p>
+                  <p class="paper-meta">
+                    {p.venue}{issueMeta ? `, ${issueMeta}` : ''}{p.authors ? ` ${p.authors}` : ''}
+                  </p>
                 </a>
               );
             })}
