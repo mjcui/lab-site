@@ -30,3 +30,4 @@ _tmp/
 
 # 原始截图抠图（含人脸，仅本地，勿提交）
 avatars_cutout/
+.crossref-cache.json
