@@ -17,6 +17,14 @@ const abstract = entry.data.abstract?.trim() ?? '';
 const bibtex = entry.data.bibtex?.trim() ?? '';
 const links = entry.data.links;
 const hasLinks = Boolean(links?.online || links?.pdf || links?.project || links?.code);
+// 卷期页码：2024, 10(6): 6102-6114
+const issueMeta = (() => {
+  const { volume, issue, pages } = entry.data;
+  if (!volume && !issue && !pages) return '';
+  const head = [volume, issue].filter(Boolean).join('(') + (volume && issue ? ')' : '');
+  const tail = pages ? `: ${pages}` : '';
+  return `${entry.data.year}, ${head}${tail}`;
+})();
 const hasBody = Boolean(entry.body?.trim());
 const { Content } = await render(entry);
 const pageDesc = abstract || summarizeParts([entry.data.authors, entry.data.venue, entry.data.year], 160);
@@ -27,9 +35,17 @@ const pageDesc = abstract || summarizeParts([entry.data.authors, entry.data.venu
       <h1 class="page-title">{entry.data.title}</h1>
       <div class="detail-meta">
         <span class="badge">{entry.data.venue}</span>
-        <span class="badge-muted">{entry.data.year}</span>
+        {issueMeta && <span class="badge-muted">{issueMeta}</span>}
       </div>
       {entry.data.authors && <p class="paper-authors">Authors: {entry.data.authors}</p>}
+      {entry.data.doi && (
+        <p class="paper-doi">
+          DOI:{' '}
+          <a href={`https://doi.org/${entry.data.doi}`} target="_blank" rel="noreferrer">
+            {entry.data.doi}
+          </a>
+        </p>
+      )}
     </article>
 
     {abstract && (
