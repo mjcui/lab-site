@@ -50,6 +50,12 @@ const papers = defineCollection({
     year: z.number().int(),
     title: z.string().min(1),
     venue: z.string().min(1),
+    // 卷期号与页码，如 volume: "426", issue: "1", pages: "128625"
+    volume: z.string().min(1).optional(),
+    issue: z.string().min(1).optional(),
+    pages: z.string().min(1).optional(),
+    // DOI（不带 https://doi.org/ 前缀）
+    doi: z.string().min(1).optional(),
     authors: z.string().optional(),
     abstract: z.string().optional(),
     links: z
