@@ -46,6 +46,7 @@ const pageDesc = 'Browse our lab papers and publication metadata.';
                 const tail = p.pages ? `: ${p.pages}` : '';
                 return `${head}${tail}`;
               })();
+              const isAccepted = p.pubStatus === 'accepted';
               return (
                 <a
                   href={b(`/en/papers/${p.slug}/`)}
@@ -59,7 +60,7 @@ const pageDesc = 'Browse our lab papers and publication metadata.';
                   </div>
                   <h3 class="paper-title">{p.title}</h3>
                   <p class="paper-meta">
-                    {p.venue}{issueMeta ? `, ${issueMeta}` : ''}{p.authors ? ` ${p.authors}` : ''}
+                    {p.venue}{issueMeta ? `, ${issueMeta}` : ''}{isAccepted ? ', accepted, in press' : ''}{p.authors ? ` ${p.authors}` : ''}
                   </p>
                 </a>
               );
