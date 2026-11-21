@@ -25,6 +25,8 @@ const issueMeta = (() => {
   const tail = pages ? `: ${pages}` : '';
   return `${entry.data.year}, ${head}${tail}`;
 })();
+// 已录用待出版（网络首发）：卷期页码尚未确定，用状态徽章代替
+const isAccepted = entry.data.pubStatus === 'accepted';
 const hasBody = Boolean(entry.body?.trim());
 const { Content } = await render(entry);
 const pageDesc = abstract || summarizeParts([entry.data.authors, entry.data.venue, entry.data.year], 160);
@@ -35,7 +37,11 @@ const pageDesc = abstract || summarizeParts([entry.data.authors, entry.data.venu
       <h1 class="page-title">{entry.data.title}</h1>
       <div class="detail-meta">
         <span class="badge">{entry.data.venue}</span>
-        {issueMeta && <span class="badge-muted">{issueMeta}</span>}
+        {isAccepted ? (
+          <span class="badge-muted">已录用 · 待出版</span>
+        ) : (
+          issueMeta && <span class="badge-muted">{issueMeta}</span>
+        )}
       </div>
       {entry.data.authors && <p class="paper-authors">作者：{entry.data.authors}</p>}
       {entry.data.doi && (
